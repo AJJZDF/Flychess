@@ -26,9 +26,9 @@ public class Chess {
     public static int RED = 0,YELLOW = 1, BLUE = 2,GREEN = 3;
 
 //    public static int LUCKYBLUE = 0,LUCKYGREEN = 1,LUCKYRED = 2,LUCKYYELLOW = 3;
-
+    //小跳棋（4步）坐标
     public static int luckycolor[];
-
+    //大跳坐标
     public static int supercolor[];
 
     public static int colorlist[];
