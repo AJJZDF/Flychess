@@ -122,8 +122,8 @@ public class GameManager extends Thread{
                         //插入自己的棋子列表
                         chess.insertToIndexList(pair);
                         //记得隐藏其他的棋子
-                        player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                        action = new Action(pair.x,pair.y,Action.HIDE);
+                        player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                        action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                         queue.enqueue(action);
                     }
                     //更新棋盘
@@ -138,8 +138,8 @@ public class GameManager extends Thread{
                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                     {
                         //坠落，回到停机坪
-                        player[pair.x].chesslist[pair.y].setFallen();
-                        action = new Action(pair.x,pair.y,Action.FALLEN);
+                        player[pair.playerId].chesslist[pair.chessId].setFallen();
+                        action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                         queue.enqueue(action);
                     }
 
@@ -191,8 +191,8 @@ public class GameManager extends Thread{
                             //插入自己的棋子列表
                             chess.insertToIndexList(pair);
                             //记得隐藏其他的棋子
-                            player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                            action = new Action(pair.x,pair.y,Action.HIDE);
+                            player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                            action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                             queue.enqueue(action);
                         }
                         //更新棋盘
@@ -207,8 +207,8 @@ public class GameManager extends Thread{
                         for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                         {
                             //坠落，回到停机坪
-                            player[pair.x].chesslist[pair.y].setFallen();
-                            action = new Action(pair.x,pair.y,Action.FALLEN);
+                            player[pair.playerId].chesslist[pair.chessId].setFallen();
+                            action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                             queue.enqueue(action);
                         }
 
@@ -277,8 +277,8 @@ public class GameManager extends Thread{
                     {
                         for(Pair pair:chess.getIndexlist())
                         {
-                            player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_FINISH);
-                            action = new Action(pair.x,pair.y,Action.FINISHED);
+                            player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_FINISH);
+                            action = new Action(pair.playerId,pair.chessId,Action.FINISHED);
                             queue.enqueue(action);
                         }
                     }
@@ -293,8 +293,8 @@ public class GameManager extends Thread{
                             {
                                 chess.insertToIndexList(pair);
 
-                                player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                                action = new Action(pair.x,pair.y,Action.HIDE);
+                                player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                                action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                                 queue.enqueue(action);
                             }
                             //更新棋盘
@@ -340,8 +340,8 @@ public class GameManager extends Thread{
                         queue.enqueue(action);
                         for(Pair pair:chess.getIndexlist())
                         {
-                            player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_FINISH);
-                            action = new Action(pair.x,pair.y,Action.FINISHED);
+                            player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_FINISH);
+                            action = new Action(pair.playerId,pair.chessId,Action.FINISHED);
                             queue.enqueue(action);
                         }
                     }
@@ -377,8 +377,8 @@ public class GameManager extends Thread{
                             {
                                 chess.insertToIndexList(pair);
 
-                                player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                                action = new Action(pair.x,pair.y,Action.HIDE);
+                                player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                                action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                                 queue.enqueue(action);
                             }
                             //更新棋盘
@@ -422,8 +422,8 @@ public class GameManager extends Thread{
                             //插入自己的棋子列表
                             chess.insertToIndexList(pair);
                             //记得隐藏其他的棋子
-                            player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                            action = new Action(pair.x,pair.y,Action.HIDE);
+                            player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                            action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                             queue.enqueue(action);
                         }
                         //更新棋盘
@@ -436,8 +436,8 @@ public class GameManager extends Thread{
                         for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                         {
                             //坠落，回到停机坪
-                            player[pair.x].chesslist[pair.y].setFallen();
-                            action = new Action(pair.x,pair.y,Action.FALLEN);
+                            player[pair.playerId].chesslist[pair.chessId].setFallen();
+                            action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                             queue.enqueue(action);
                         }
                         //更新棋盘
@@ -483,8 +483,8 @@ public class GameManager extends Thread{
                                     //插入自己的棋子列表
                                     chess.insertToIndexList(pair);
                                     //记得隐藏其他的棋子
-                                    player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                                    action = new Action(pair.x,pair.y,Action.HIDE);
+                                    player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                                    action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                                     queue.enqueue(action);
                                 }
                                 //更新棋盘
@@ -497,8 +497,8 @@ public class GameManager extends Thread{
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                 {
                                     //坠落，回到停机坪
-                                    player[pair.x].chesslist[pair.y].setFallen();
-                                    action = new Action(pair.x,pair.y,Action.FALLEN);
+                                    player[pair.playerId].chesslist[pair.chessId].setFallen();
+                                    action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                                     queue.enqueue(action);
                                 }
                                 //更新棋盘
@@ -532,8 +532,8 @@ public class GameManager extends Thread{
                                  for(Pair pair:chessboard[attackpos].getIndexlist())
                                  {
                                      //坠落，回到停机坪
-                                     player[pair.x].chesslist[pair.y].setFallen();
-                                     action = new Action(pair.x,pair.y,Action.FALLEN);
+                                     player[pair.playerId].chesslist[pair.chessId].setFallen();
+                                     action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                                      queue.enqueue(action);
                                  }
 
@@ -570,8 +570,8 @@ public class GameManager extends Thread{
                                     //插入自己的棋子列表
                                     chess.insertToIndexList(pair);
                                     //记得隐藏其他的棋子
-                                    player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                                    action = new Action(pair.x,pair.y,Action.HIDE);
+                                    player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                                    action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                                     queue.enqueue(action);
                                 }
                             }
@@ -581,8 +581,8 @@ public class GameManager extends Thread{
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                 {
                                     //坠落，回到停机坪
-                                    player[pair.x].chesslist[pair.y].setFallen();
-                                    action = new Action(pair.x,pair.y,Action.FALLEN);
+                                    player[pair.playerId].chesslist[pair.chessId].setFallen();
+                                    action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                                     queue.enqueue(action);
                                 }
                             }
@@ -613,8 +613,8 @@ public class GameManager extends Thread{
                                     //插入自己的棋子列表
                                     chess.insertToIndexList(pair);
                                     //记得隐藏其他的棋子
-                                    player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                                    action = new Action(pair.x,pair.y,Action.HIDE);
+                                    player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                                    action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                                     queue.enqueue(action);
                                 }
                             }
@@ -624,8 +624,8 @@ public class GameManager extends Thread{
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                 {
                                     //坠落，回到停机坪
-                                    player[pair.x].chesslist[pair.y].setFallen();
-                                    action = new Action(pair.x,pair.y,Action.FALLEN);
+                                    player[pair.playerId].chesslist[pair.chessId].setFallen();
+                                    action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                                     queue.enqueue(action);
                                 }
                             }
@@ -661,8 +661,8 @@ public class GameManager extends Thread{
                                         //插入自己的棋子列表
                                         chess.insertToIndexList(pair);
                                         //记得隐藏其他的棋子
-                                        player[pair.x].chesslist[pair.y].setStatus(Chess.STATUS_HIDING);
-                                        action = new Action(pair.x,pair.y,Action.HIDE);
+                                        player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                                        action = new Action(pair.playerId,pair.chessId,Action.HIDE);
                                         queue.enqueue(action);
                                     }
                                 }
@@ -672,8 +672,8 @@ public class GameManager extends Thread{
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
                                         //坠落，回到停机坪
-                                        player[pair.x].chesslist[pair.y].setFallen();
-                                        action = new Action(pair.x,pair.y,Action.FALLEN);
+                                        player[pair.playerId].chesslist[pair.chessId].setFallen();
+                                        action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                                         queue.enqueue(action);
                                     }
                                 }
