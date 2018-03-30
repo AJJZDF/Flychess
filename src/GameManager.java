@@ -34,7 +34,7 @@ public class GameManager extends Thread{
         }
         return false;
     }
-    //提供给扔骰子的按钮，按钮时调用这个函数
+    //提供给扔骰子的按钮，按按钮时调用这个函数
     public void setDice(int dice){
         if(dice <= 0 || dice > 6){
             System.out.print("dice out of range in GameManager: setDice(int dice)");
@@ -54,6 +54,71 @@ public class GameManager extends Thread{
             return false;
         }
         return true;
+    }
+
+    //返回当前玩家可以选择的棋子
+    //前提：扔了骰子才可以调用
+    public Queue<Integer> getChessAvailable(int playerid)
+    {
+        if(dice < 0){
+            System.out.println("Unexpected error in GameManager: getChessAvailable(int playerid)");
+            System.exit(0);
+        }
+        PlayerAI playerAI = (PlayerAI) player[playerid];
+        return playerAI.available_choice(dice);
+    }
+
+
+    //设置玩家为挂机模式
+    public void switchToAI(int playerid)
+    {
+        //只有玩家模式才可以转换位挂机
+        if(player[playerid].getKind() != BasicAI.PEOPLE)
+        {
+            System.out.println("Unexpected error in GameManager: switchToAI(int playerid)");
+            System.exit(0);
+        }
+
+        PlayerAI playerAI = (PlayerAI) player[playerid];
+        playerAI.switchToAI();
+        player[playerid] = playerAI;
+    }
+
+    //从挂机模式中恢复
+    public void switchToUser(int playerid)
+    {
+        //只有玩家AI模式才可以恢复为玩家模式，全自动AI不可以切换为玩家模式
+        if(player[playerid].getKind() != BasicAI.PLAYERAI)
+        {
+            System.out.println("Unexpected error in GameManager: switchToUser(int playerid)");
+            System.exit(0);
+        }
+
+        PlayerAI playerAI = (PlayerAI) player[playerid];
+        playerAI.switchToUser();
+        player[playerid] = playerAI;
+    }
+
+    //AI自己选择棋子
+    private int getAIChoice(int playerid)
+    {
+        //只有扔了骰子AI才可以自动选择
+        if(dice < 0){
+            System.out.println("Unexpected error in GameManager: getAIChoice(int playerid)");
+            System.exit(0);
+        }
+
+        //只有为AI模式才可以自动选择棋子
+        if(player[playerid].getKind() == BasicAI.PLAYERAI || player[playerid].getKind() == BasicAI.AUTOAI)
+        {
+            return player[playerid].ai_choice(dice,chessboard);
+        }
+        else
+        {
+            System.out.println("Unexpected error in GameManager: getAIChoice(int playerid)");
+            System.exit(0);
+        }
+        return -1;
     }
 
     //根据骰子dice,移动playid玩家的第chessindex个棋子后产生的一系列动作
@@ -752,9 +817,8 @@ public class GameManager extends Thread{
                                 e.printStackTrace();
                             }
 
-
-                            PlayerAI ai = (PlayerAI) player[i];
-                            Queue<Integer> choicelist = ai.choice(this.dice,chessboard);
+                            //获取当前玩家的可用棋子
+                            Queue<Integer> choicelist = getChessAvailable(i);
 
                             if(choicelist != null)
                             {
@@ -816,9 +880,8 @@ public class GameManager extends Thread{
                                 e.printStackTrace();
                             }
 
-                            AutoAI ai = (AutoAI) player[i];
                             //AI自己选择移动的棋子
-                            int choose = ai.choice(this.dice,chessboard);
+                            int choose = getAIChoice(i);
 
                             if(choose != -1)
                             {

@@ -9,10 +9,10 @@ class Pair
     public Pair(){
         playerId = chessId =-1;
     }
-    public Pair(int x,int y)
+    public Pair(int playerId,int chessId)
     {
-        this.playerId = x;
-        this.chessId = y;
+        this.playerId = playerId;
+        this.chessId = chessId;
     }
     public Pair(Pair that)
     {
@@ -25,22 +25,21 @@ public class Chess {
 
     public static int RED = 0,YELLOW = 1, BLUE = 2,GREEN = 3;
 
-//    public static int LUCKYBLUE = 0,LUCKYGREEN = 1,LUCKYRED = 2,LUCKYYELLOW = 3;
+    //5种棋子状态:飞机砰，起飞线，飞行中途,已完成，隐藏状态(多个棋子合体时用到)
+    public static int STATUS_AIRPORT = 0,STATUS_STARTLINE = 1 ,STATUS_FLYING = 2,STATUS_FINISH = 3,STATUS_HIDING = 4;
+
+    //1种棋盘的状态:空棋盘
+    public static int STATUS_EMPTY = 5;
+
     //小跳棋（4步）坐标
     public static int luckycolor[];
     //大跳坐标
     public static int supercolor[];
-
+    //中间的棋盘颜色
     public static int colorlist[];
 
-    //3种状态:飞机砰，起飞线，飞行中
-    public static int STATUS_AIRPORT = 4,STATUS_STARTLINE = 5 ,STATUS_FLYING = 6,
-            STATUS_EMPTY = 7,STATUS_FINISH = 9,STATUS_HIDING = 10;
-
+    //每中颜色玩家的棋子对应的起始位置
     public static int originPos[];
-
-
-
 
     static
     {
@@ -68,10 +67,9 @@ public class Chess {
         originPos[YELLOW] = 13;
         originPos[BLUE]  = 26;
         originPos[GREEN] = 39;
-
     }
 
-
+    //棋子状态
     private int status;
 
     //棋子颜色
@@ -82,7 +80,6 @@ public class Chess {
 
     // 棋子列表(属于哪个玩家，第几个棋子)
     private Queue<Pair> indexlist;
-
 
     public String toString()
     {
@@ -127,6 +124,8 @@ public class Chess {
         this.indexlist = new Queue<Pair>();
         this.pos = pos;
     }
+
+    //复制拷贝用的
     public Chess(Chess that)
     {
         this.status = that.status;
@@ -152,6 +151,7 @@ public class Chess {
     {
         return color;
     }
+
     //终点
     public int endPoint()
     {
@@ -227,14 +227,6 @@ public class Chess {
         setStatus(STATUS_AIRPORT);
         this.pos = originPos[color];
     }
-    //设置完成状态
-    //警告：设置状态时，其它的值是否应该改变？？？
-    //还得看棋子的类型！！！！！！
-    public void setFinish()
-    {
-        setStatus(STATUS_FINISH);
-    }
-
 
     //判断两个棋子是否可以合体
     public boolean mergeTest(Chess that)
@@ -244,13 +236,9 @@ public class Chess {
         }
         return false;
     }
-    public int getSize()
-    {
-        return this.indexlist.size();
-    }
     //判断棋子是否可以吃掉另外一个棋子
-    //有两种种情况需要特判！！！
-    //飞步或跳步的时候！！！！！
+    //有一种种情况需要特判！！！
+    //飞步穿越中间位置的时候（特判见下面的attack)！！！！！
     public boolean eatTest(Chess that)
     {
         if(that.status != STATUS_EMPTY && that.color != this.color && that.pos == this.pos){
@@ -258,7 +246,7 @@ public class Chess {
         }
         return false;
     }
-    //飞步的时候，是否可以攻击
+    //飞步穿越中间位置的时候，是否可以攻击
     public boolean attackTest(Chess that)
     {
         if(color == RED)
@@ -280,6 +268,7 @@ public class Chess {
             else return false;
         }
     }
+    //获取飞步时攻击的中间位置的位置
     public int getAttackPos()
     {
         if(color == RED){
@@ -298,14 +287,6 @@ public class Chess {
     {
         return indexlist;
     }
-    public void setIndexlist(Queue<Pair> indexlist)
-    {
-        if(indexlist == null){
-            System.out.print("indexlist is null in Chess: setIndexlist(Queue<Pair> indexlist)");
-            System.exit(0);
-        }
-        this.indexlist = indexlist;
-    }
     public void insertToIndexList(Pair person)
     {
         if(indexlist == null){
@@ -322,7 +303,7 @@ public class Chess {
         }
         while(!indexlist.isEmpty()) indexlist.dequeue();
     }
-    //是否接近终点
+    //是否在终点线
     public boolean sprint()
     {
         if(color == RED){
@@ -338,7 +319,7 @@ public class Chess {
             return (67 <= pos && pos <= 71);
         }
     }
-    //是否接近终点
+    //是否接近终点线
     public boolean presprint(int dice)
     {
         if(color == RED){
@@ -357,54 +338,34 @@ public class Chess {
     //进入终点线
     public void setEndLine(int dice)
     {
-        if(color == RED)
-        {
+        if(color == RED) {
             //是否可以直接到达终点？
             if(pos == 50 && dice == 6){
-
                 setPos(72);
                 setStatus(STATUS_FINISH);
-
-                //棋子列表不删除。。
-
             }
-            else{
-
-                setPos(dice - 50 + pos + 51);
-            }
+            else setPos(dice - 50 + pos + 51);
         }
-        else if(color == YELLOW)
-        {
-            if(pos == 11 && dice == 6)
-            {
+        else if(color == YELLOW) {
+            if(pos == 11 && dice == 6) {
                 setPos(72);
                 setStatus(STATUS_FINISH);
             }
-            else{
-                setPos(dice - 11 + pos + 56);
-            }
+            else setPos(dice - 11 + pos + 56);
         }
-        else if(color == BLUE)
-        {
-            if(pos == 24 && dice == 6)
-            {
+        else if(color == BLUE) {
+            if(pos == 24 && dice == 6) {
                 setPos(72);
                 setStatus(STATUS_FINISH);
             }
-            else{
-                setPos(dice - 24 + pos + 61);
-            }
+            else setPos(dice - 24 + pos + 61);
         }
-        else
-        {
-            if(pos == 37 && dice == 6)
-            {
+        else {
+            if(pos == 37 && dice == 6) {
                 setPos(72);
                 setStatus(STATUS_FINISH);
             }
-            else{
-                setPos(dice - 37 + pos + 66);
-            }
+            else setPos(dice - 37 + pos + 66);
         }
     }
     //在终点线反弹
@@ -412,7 +373,6 @@ public class Chess {
     public boolean rebound(int dice)
     {
         if(color == RED){
-
             if(pos + dice == 57){
                 setPos(72);
                 setStatus(STATUS_FINISH);
@@ -480,7 +440,7 @@ public class Chess {
         }
     }
 
-    //是否接近终点
+    //是否在进入终点线的入口
     public boolean entry()
     {
         if(color == RED){
@@ -497,7 +457,7 @@ public class Chess {
         }
     }
 
-    //入口
+    //进入终点线的入口
     public int getEntry()
     {
         if(color == RED)
@@ -514,7 +474,7 @@ public class Chess {
         }
         else return 37;
     }
-    //
+    //是否到达终点
     public boolean testGoal(int dice)
     {
         if(color == RED){
