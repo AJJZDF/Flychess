@@ -4,20 +4,20 @@
 
 class Pair
 {
-    public int x;
-    public int y;
+    public int playerId;
+    public int chessId;
     public Pair(){
-        x = y =-1;
+        playerId = chessId =-1;
     }
     public Pair(int x,int y)
     {
-        this.x = x;
-        this.y = y;
+        this.playerId = x;
+        this.chessId = y;
     }
     public Pair(Pair that)
     {
-        this.x = that.x;
-        this.y = that.y;
+        this.playerId = that.playerId;
+        this.chessId = that.chessId;
     }
 }
 
@@ -26,16 +26,16 @@ public class Chess {
     public static int RED = 0,YELLOW = 1, BLUE = 2,GREEN = 3;
 
 //    public static int LUCKYBLUE = 0,LUCKYGREEN = 1,LUCKYRED = 2,LUCKYYELLOW = 3;
-
+    //小跳棋（4步）坐标
     public static int luckycolor[];
-
+    //大跳坐标
     public static int supercolor[];
 
     public static int colorlist[];
 
     //3种状态:飞机砰，起飞线，飞行中
     public static int STATUS_AIRPORT = 4,STATUS_STARTLINE = 5 ,STATUS_FLYING = 6,
-            STATUS_EMPTY = 7,STATUS_FULL = 8,STATUS_FINISH = 9,STATUS_HIDING = 10;
+            STATUS_EMPTY = 7,STATUS_FINISH = 9,STATUS_HIDING = 10;
 
     public static int originPos[];
 
@@ -93,7 +93,7 @@ public class Chess {
         str += "\n";
         for(Pair pair:indexlist)
         {
-            str = str + "[ " +pair.x+" , "+pair.y+" ], ";
+            str = str + "[ " +pair.playerId +" , "+pair.chessId +" ], ";
         }
         return str;
     }
@@ -547,7 +547,7 @@ public class Chess {
     private boolean illegalStatus(int status)
     {
         if(status != STATUS_AIRPORT && status != STATUS_FLYING && status != STATUS_STARTLINE
-                && status != STATUS_EMPTY && status != STATUS_FULL && status != STATUS_FINISH && status != STATUS_HIDING)
+                && status != STATUS_EMPTY  && status != STATUS_FINISH && status != STATUS_HIDING)
         {
             return true;
         }
