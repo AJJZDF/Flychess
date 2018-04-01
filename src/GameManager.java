@@ -18,13 +18,13 @@ public class GameManager{
 
     private int players_cnt = -1;
 
-    public GameManager(BasicAI player1,BasicAI player2,BasicAI player3,BasicAI player4)
+    public GameManager(BasicAI red,BasicAI yellow,BasicAI blue,BasicAI green)
     {
         player = new BasicAI[4];
-        player[0] = player1;
-        player[1] = player2;
-        player[2] = player3;
-        player[3] = player4;
+        player[0] = red;
+        player[1] = yellow;
+        player[2] = blue;
+        player[3] = green;
         chessboard = new Chess[72];
         for(int i = 0 ; i < 72; i++)
         {
@@ -40,12 +40,12 @@ public class GameManager{
         players_cnt = 4;
 
     }
-    public GameManager(BasicAI player1,BasicAI player2,BasicAI player3)
+    public GameManager(BasicAI red,BasicAI yellow,BasicAI blue)
     {
         player = new BasicAI[3];
-        player[0] = player1;
-        player[1] = player2;
-        player[2] = player3;
+        player[0] = red;
+        player[1] = yellow;
+        player[2] = blue;
         chessboard = new Chess[72];
         for(int i = 0 ; i < 72; i++)
         {
@@ -60,11 +60,11 @@ public class GameManager{
 
         players_cnt = 3;
     }
-    public GameManager(BasicAI player1,BasicAI player2)
+    public GameManager(BasicAI red,BasicAI blue)
     {
         player = new BasicAI[3];//好像必须得三个...虽然只需要两个位置..但是蓝色玩家一定要处于第2个位置上（从0数起）
-        player[0] = player1;
-        player[2] = player2;
+        player[0] = red;
+        player[2] = blue;
         chessboard = new Chess[72];
         for(int i = 0 ; i < 72; i++)
         {
