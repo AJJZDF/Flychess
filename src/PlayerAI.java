@@ -36,10 +36,11 @@ public class PlayerAI extends BasicAI {
     public Queue<Integer> available_choice(int dice)
     {
         Queue<Integer> queue = getAvailableMove();
-        Queue<Integer> choose = new Queue<>();
+        Queue<Integer> choose = new Queue<Integer>();
+
         if(queue.isEmpty())
         {
-            if(dice <= 4) return  null;
+            if(dice <= 4) return  choose;
             for (int i = 0; i < 4 ;i++)
             {
                 if(chesslist[i].getStatus() == Chess.STATUS_AIRPORT)

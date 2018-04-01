@@ -3,12 +3,21 @@ import java.util.Scanner;
 /**
  * Created by gitfan on 3/29/18.
  */
-public class GameManager extends Thread{
+
+//单机版GameManager
+public class GameManager{
 
     private BasicAI player[];
     private Chess chessboard[];
-    private int dice;
-    private int turn;
+    private boolean waitingdice;//还在等待扔骰子
+    private boolean waitingchoice;//还在等待选择
+
+    private int dice;//当前的骰子
+    private int turn;//当前轮到谁？
+    private int choice;//当前的选择是什么?
+
+
+
 
     public GameManager(BasicAI player1,BasicAI player2,BasicAI player3,BasicAI player4)
     {
@@ -23,7 +32,12 @@ public class GameManager extends Thread{
             chessboard[i] = new Chess(i);
         }
         dice = -1;
+        choice = -1;
         turn = 0;
+
+        waitingdice = true;
+        waitingchoice = true;
+
     }
     public boolean isGameOver()
     {
@@ -40,31 +54,49 @@ public class GameManager extends Thread{
             System.out.print("dice out of range in GameManager: setDice(int dice)");
             System.exit(0);
         }
+
+        waitingdice = false;//玩家已经投掷骰子了
         this.dice = dice;
+        //扔完骰子后开始等待玩家选择棋子
+        this.waitingchoice = true;
     }
-    //主要是没有棋子可供选择时，需要手动调用setNextTern函数
-    public void setNextTern()
+    //提供给点击棋子的按钮，玩家点击棋子时调用这个函数
+    //用来设置当前选择的棋子,如果没有棋子可以选择请使用setChoice(-1)
+    public void setChoice(int choice)
     {
-        turn = (turn + 1)%4;
+        //扔了骰子才可以进行选择
+        if(waitingdice){
+            System.out.println("unexpected error in GameManager: setChoice(int choice)");
+            System.exit(0);
+        }
+
+        waitingchoice = false;//取消等待选择的标记
+        this.choice = choice;
+
+        //为下一轮游戏做准备
+        waitingdice = true;
     }
     //检测骰子是否已经准备好
-    private boolean chessDice()
+    public boolean waitDice()
     {
-        if(dice <= 0 || dice > 6){
-            return false;
-        }
-        return true;
+        return waitingdice;
+    }
+
+    //检测玩家是否已经选择棋子
+    public boolean waitChoice()
+    {
+        return waitingchoice;
     }
 
     //返回当前玩家可以选择的棋子
     //前提：扔了骰子才可以调用
-    public Queue<Integer> getChessAvailable(int playerid)
+    public Queue<Integer> getChessAvailable()
     {
-        if(dice < 0){
+        if(waitingdice){
             System.out.println("Unexpected error in GameManager: getChessAvailable(int playerid)");
             System.exit(0);
         }
-        PlayerAI playerAI = (PlayerAI) player[playerid];
+        PlayerAI playerAI = (PlayerAI) player[getTurn()];
         return playerAI.available_choice(dice);
     }
 
@@ -100,37 +132,52 @@ public class GameManager extends Thread{
     }
 
     //AI自己选择棋子
-    private int getAIChoice(int playerid)
+    public int getAIChoice()
     {
         //只有扔了骰子AI才可以自动选择
-        if(dice < 0){
+        if(waitingdice){
             System.out.println("Unexpected error in GameManager: getAIChoice(int playerid)");
             System.exit(0);
         }
-
-        //只有为AI模式才可以自动选择棋子
-        if(player[playerid].getKind() == BasicAI.PLAYERAI || player[playerid].getKind() == BasicAI.AUTOAI)
-        {
-            return player[playerid].ai_choice(dice,chessboard);
-        }
-        else
-        {
-            System.out.println("Unexpected error in GameManager: getAIChoice(int playerid)");
-            System.exit(0);
-        }
-        return -1;
+        return player[getTurn()].ai_choice(dice,chessboard);
     }
 
-    //根据骰子dice,移动playid玩家的第chessindex个棋子后产生的一系列动作
-    public Queue<Action> actionlist(int playerid,int chessindex)
+    //联机部分可能用到
+    //主要提供给UI界面，获取现在轮到谁玩游戏
+    //UI那里可以根据这个函数确定轮到谁玩游戏
+    //然后设置相关的界面（比如扔骰子，只有轮到的人才出现那个可以出现扔骰子的按钮）
+    public int getTurn()
     {
+        return turn;
+    }
+
+    //判断现在是不是AI在玩游戏
+    //还是提供给UI界面，主要是给UI界面用来确定扔骰子时是自动扔，还是等人点击才扔?
+    public boolean isAI()
+    {
+        return (player[getTurn()].getKind() == BasicAI.AUTOAI || player[getTurn()].getKind() == BasicAI.PLAYERAI );
+    }
+
+    //用户选完棋子后，产生的一系列动作
+    public Queue<Action> actionlist()
+    {
+        //只有选了棋子才能发生动作
+        if(waitingchoice)
+        {
+            System.out.println("Unexpected error in GameManager: actionlist()");
+            System.exit(0);
+        }
+
+
         Queue<Action> queue = new Queue<Action>();
         Action action;
         Chess chess;
+        int playerid = getTurn();
+        int chessindex = choice;
         if(chessindex == -1)
         {
             turn  = (turn + 1)%4;
-            return  null;
+            return  queue;
         }
         else
         {
@@ -164,7 +211,7 @@ public class GameManager extends Thread{
                 else
                 {
                     turn  = (turn + 1)%4;
-                    return  null;
+                    return  queue;
                 }
             }
             //位于起飞点
@@ -381,7 +428,6 @@ public class GameManager extends Thread{
                     return queue;
 
                 }
-
                 //是否已经进入终点线
                 else if(chess.sprint())
                 {
@@ -526,9 +572,13 @@ public class GameManager extends Thread{
                     }
                     else
                     {
+                        boolean flag = false;
+
                         //先特判一下是不是可以导致飞步的跳步；
                         if(chess.getPos() == chess.getPreFlyingPoint())
                         {
+                            flag = true;//可以导致飞步的跳步
+
                             //先清除以前的棋盘
                             chessboard[chess.getPos()].setStatus(Chess.STATUS_EMPTY);
                             chessboard[chess.getPos()].clearIndexList();
@@ -656,49 +706,53 @@ public class GameManager extends Thread{
                             action = new Action(playerid,chessindex,Action.TURNRIGHT);
                             queue.enqueue(action);
 
-                            //直接删除棋盘，因为还要继续跳
-                            chessboard[chess.getPos()].setStatus(Chess.STATUS_EMPTY);
-                            chessboard[chess.getPos()].clearIndexList();
-
-
-                            //在走四步
-                            //会有人吗？
-                            //会是自己人吗，还是其他人
-
-                            chess.setPos((chess.getPos() + 4)%52);
-                            action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
-                            queue.enqueue(action);
-
-
-                            //合体
-                            if(chess.mergeTest(chessboard[chess.getPos()]))
+                            if(!flag)
                             {
-                                for(Pair pair:chessboard[chess.getPos()].getIndexlist())
-                                {
-                                    //插入自己的棋子列表
-                                    chess.insertToIndexList(pair);
-                                    //记得隐藏其他的棋子
-                                    player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
-                                    action = new Action(pair.playerId,pair.chessId,Action.HIDE);
-                                    queue.enqueue(action);
-                                }
-                            }
-                            //吃掉
-                            else if(chess.eatTest(chessboard[chess.getPos()]))
-                            {
-                                for(Pair pair:chessboard[chess.getPos()].getIndexlist())
-                                {
-                                    //坠落，回到停机坪
-                                    player[pair.playerId].chesslist[pair.chessId].setFallen();
-                                    action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
-                                    queue.enqueue(action);
-                                }
-                            }
 
-                            //更新棋盘
-                            chessboard[chess.getPos()] = new Chess(chess);
-                            //更新自己的棋子
-                            player[playerid].setChess(chessindex,chess);
+                                //直接删除棋盘，因为还要继续跳
+                                chessboard[chess.getPos()].setStatus(Chess.STATUS_EMPTY);
+                                chessboard[chess.getPos()].clearIndexList();
+
+
+                                //在走四步
+                                //会有人吗？
+                                //会是自己人吗，还是其他人
+
+                                chess.setPos((chess.getPos() + 4)%52);
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                queue.enqueue(action);
+
+
+                                //合体
+                                if(chess.mergeTest(chessboard[chess.getPos()]))
+                                {
+                                    for(Pair pair:chessboard[chess.getPos()].getIndexlist())
+                                    {
+                                        //插入自己的棋子列表
+                                        chess.insertToIndexList(pair);
+                                        //记得隐藏其他的棋子
+                                        player[pair.playerId].chesslist[pair.chessId].setStatus(Chess.STATUS_HIDING);
+                                        action = new Action(pair.playerId,pair.chessId,Action.HIDE);
+                                        queue.enqueue(action);
+                                    }
+                                }
+                                //吃掉
+                                else if(chess.eatTest(chessboard[chess.getPos()]))
+                                {
+                                    for(Pair pair:chessboard[chess.getPos()].getIndexlist())
+                                    {
+                                        //坠落，回到停机坪
+                                        player[pair.playerId].chesslist[pair.chessId].setFallen();
+                                        action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
+                                        queue.enqueue(action);
+                                    }
+                                }
+
+                                //更新棋盘
+                                chessboard[chess.getPos()] = new Chess(chess);
+                                //更新自己的棋子
+                                player[playerid].setChess(chessindex,chess);
+                            }
                         }
                         else
                         {
@@ -763,162 +817,24 @@ public class GameManager extends Thread{
             else
             {
                 if(dice != 6) turn = (turn + 1)%4;
-                return null;
+                return queue;
             }
-        }
-    }
-
-    public void run() {
-        while(!isGameOver())
-        {
-            for(int i = 0 ; i < 4;i++)
-            {
-                if(player[i].isMyturn(turn))
-                {
-
-                    while(player[i].isMyturn(turn))
-                    {
-
-                        String str ="";
-                        if(player[i].color == Chess.RED) str = "Red";
-                        else if(player[i].color == Chess.GREEN) str = "Green";
-                        else if(player[i].color == Chess.BLUE) str = "Blue";
-                        else if(player[i].color == Chess.YELLOW) str = "Yellow";
-
-                        Queue<Action> actions;
-
-                        if(player[i].getKind() == BasicAI.PEOPLE)
-                        {
-                            /*
-                             * 显示扔骰子的按钮
-                             * 只有等玩家点击扔按钮才可以开始扔骰子
-                             * 记得在触发器里面调用setDice(dice)
-                             */
-
-
-                            System.out.println("\ncurrplayer :" + str);
-
-                            System.out.print("please throw a dice: ");
-
-                            Scanner in  = new Scanner(System.in);
-
-                            str = in.next();
-
-                            //临时用这个代替扔骰子
-                            //扔骰子的功能完成后记得去掉
-                            int currdice = ((int)(Math.random()*1000000))%6 + 1;
-                            setDice(currdice);
-
-                            System.out.println("dice: " + currdice);
-
-                            while(!chessDice()) try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            //获取当前玩家的可用棋子
-                            Queue<Integer> choicelist = getChessAvailable(i);
-
-                            if(choicelist != null)
-                            {
-                                System.out.print("your available choice: ");
-                                for(int choice:choicelist)
-                                {
-                                    System.out.print(" " + choice);
-                                }
-                                System.out.print(" :");
-
-                                int val;
-
-                                val = in.nextInt();
-
-                                actions = actionlist(i,val);
-
-                                for(Action action:actions)
-                                {
-                                    System.out.println(action);
-                                }
-                            }
-                            else
-                            {
-                                //没有棋子可供选择时，需要手动调用setNextTern函数！！！
-                                setNextTern();
-                                System.out.println("No choice");
-                            }
-                        }
-                        else
-                        {
-                        /*
-                         * 显示扔骰子的按钮
-                         * 因为是机器人，所以可以立即扔骰子，但是要显示人扔出的骰子的动画
-                         * 记得在触发器里面调用setDice(dice)
-                         */
-
-                            System.out.println("\nAIplayer :" + str);
-
-                            System.out.println("Throwing a dice...");
-
-                            try {
-                                Thread.sleep(1);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-
-                            //临时用这个代替扔骰子
-                            //扔骰子的功能完成后记得去掉
-                            int currdice = ((int)(Math.random()*1000000))%6 + 1;
-                            setDice(currdice);
-
-                            System.out.println("dice: " + currdice);
-
-                            //不断扫描骰子状态，判断骰子有没有更新
-                            while(!chessDice()) try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            //AI自己选择移动的棋子
-                            int choose = getAIChoice(i);
-
-                            if(choose != -1)
-                            {
-                                actions = actionlist(i,choose);
-
-                                for(Action action:actions)
-                                {
-                                    System.out.println(action);
-                                }
-
-                                try {
-                                    Thread.sleep(1);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            else
-                            {
-                                //没有棋子可供选择时，需要手动调用setNextTern函数！！！
-                                setNextTern();
-                                System.out.println("No choice");
-                            }
-                        }
-
-                        //每轮都设置骰子为未扔状态
-                        dice = -1;
-                    }
-                    break;
-                }
-            }
-
         }
     }
     public static void main(String[] args) {
-        //必须按照Red，Yellow，Blue，Green的颜色顺序，玩家类型随意指定
-        GameManager manager = new GameManager(new AutoAI(Chess.RED),new AutoAI(Chess.YELLOW),
-                new AutoAI(Chess.BLUE),new AutoAI(Chess.GREEN));
-        manager.start();
+
+        String str = "    1";
+        String arr[] = str.split("\\s+");
+        if(arr.length == 0){
+            System.out.println("empty");
+        }
+        else
+        {
+            for(String s:arr){
+                System.out.println(s);
+                System.out.println("size:"+s.length());
+            }
+            System.out.println(arr.length);
+        }
     }
 }

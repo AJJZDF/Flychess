@@ -1,8 +1,4 @@
-
-import java.util.Scanner;
-
-
-public class WifiServer_GameManager extends Thread {
+public class WifiServer_GameManager extends Thread{
 
 
     private BasicAI player[];
@@ -10,7 +6,7 @@ public class WifiServer_GameManager extends Thread {
     private int dice;
     private int turn;
 
-    class GameMsgReceive extends Thread{
+    class GameMsgReceive {
         public void run(){
 
         }
@@ -735,9 +731,9 @@ public class WifiServer_GameManager extends Thread {
    */
 
     public static void main(String[] args) {
-        //必须按照Red，Yellow，Blue，Green的颜色顺序，玩家类型随意指定
-        GameManager manager = new GameManager(new PlayerAI(Chess.RED),new AutoAI(Chess.YELLOW),
-                new AutoAI(Chess.BLUE),new AutoAI(Chess.GREEN));
-        manager.start();
+//        //必须按照Red，Yellow，Blue，Green的颜色顺序，玩家类型随意指定
+//        GameManager manager = new GameManager(new PlayerAI(Chess.RED),new AutoAI(Chess.YELLOW),
+//                new AutoAI(Chess.BLUE),new AutoAI(Chess.GREEN));
+//        manager.start();
     }
 }
