@@ -158,6 +158,7 @@ public class GameManager{
 
     //返回当前玩家可以选择的棋子
     //前提：扔了骰子才可以调用
+    //如果返回的queue的size为0，那么没有棋子可以选择
     public Queue<Integer> getChessAvailable()
     {
         if(waitingdice){
@@ -166,6 +167,25 @@ public class GameManager{
         }
         PlayerAI playerAI = (PlayerAI) player[getTurn()];
         return playerAI.available_choice(dice);
+    }
+
+    //返回当前玩家可以选择的棋子(已翻译成一系列指令集)
+    //前提：扔了骰子才可以调用
+    //如果返回的queue的size为0，那么没有棋子可以选择
+    public Queue<Action> getChessAvailable_Action()
+    {
+        if(waitingdice){
+            System.out.println("Unexpected error in GameManager: getChessAvailable(int playerid)");
+            System.exit(0);
+        }
+        PlayerAI playerAI = (PlayerAI) player[getTurn()];
+        Queue<Integer> choices = playerAI.available_choice(dice);
+        Queue<Action> actionlist = new Queue<Action>();
+        for(Integer choose:choices)
+        {
+            actionlist.enqueue(new Action(getTurn(),choose,Action.ACTIVATE));
+        }
+        return actionlist;
     }
 
 
@@ -390,7 +410,9 @@ public class GameManager{
                     //记得更新自己的棋子和棋盘棋子
                     if(chess.mergeTest(chessboard[chess.getPos()]))
                     {
-                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                        queue.enqueue(action);
+                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                         queue.enqueue(action);
                         for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                         {
@@ -412,7 +434,9 @@ public class GameManager{
                     //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                     else if(chess.eatTest(chessboard[chess.getPos()]))
                     {
-                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                        queue.enqueue(action);
+                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                         queue.enqueue(action);
                         for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                         {
@@ -775,7 +799,9 @@ public class GameManager{
                             //记得更新自己的棋子和棋盘棋子
                             if(chess.mergeTest(chessboard[chess.getPos()]))
                             {
-                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                 queue.enqueue(action);
 
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
@@ -796,7 +822,9 @@ public class GameManager{
                             //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                             else if(chess.eatTest(chessboard[chess.getPos()]))
                             {
-                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                 queue.enqueue(action);
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                 {
@@ -884,7 +912,9 @@ public class GameManager{
                                 if(chess.attackTest(chessboard[attackpos]))
                                 {
                                     //踢完人继续走
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                 }
                                 else
@@ -912,13 +942,17 @@ public class GameManager{
                                 if(chess.attackTest(chessboard[attackpos]))
                                 {
                                     //踢完人继续走
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                 }
                                 else
                                 {
                                     //直接飞过对面
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,5);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                 }
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
@@ -959,7 +993,9 @@ public class GameManager{
                                 //合体
                                 if(chess.mergeTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
@@ -976,7 +1012,9 @@ public class GameManager{
                                 //吃掉
                                 else if(chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
@@ -1019,7 +1057,9 @@ public class GameManager{
                                 //合体
                                 if(chess.mergeTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
@@ -1036,7 +1076,9 @@ public class GameManager{
                                 //吃掉
                                 else if(chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,3);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
