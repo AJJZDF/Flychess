@@ -20,6 +20,8 @@ public class Action
     public static int TURNRIGHT = 7;    //右转，把第playerid个玩家的第chessid个棋子向右旋转90度，然后不用做任何事。用到的参数：playerid,chessid,action
     public static int QUICK_MOVE = 8;   //加快速度移动向前移动step步，主要是飞行时或者跳步时用的。用到的参数：playerid,chessid,action,step
 
+    public static int ACTIVATE = 9;     //当前棋子为可选状态
+
     private int playerid;       //第几个玩家，从0开始数起
     private int chessid;        //玩家的第几个棋子，从0开始数起
     private int action;         //指令类型
