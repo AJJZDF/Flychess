@@ -970,6 +970,11 @@ public class GameManager{
                             action = new Action(playerid,chessindex,Action.TURNRIGHT);
                             queue.enqueue(action);
 
+                            //更新棋盘
+                            chessboard[chess.getPos()] = new Chess(chess);
+                            //更新自己的棋子
+                            player[playerid].setChess(chessindex,chess);
+
                             if(!flag)
                             {
 
