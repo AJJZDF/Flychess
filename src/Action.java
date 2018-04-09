@@ -116,4 +116,15 @@ public class Action
         }
         else return (str + "quick_move " +str1);
     }
+    public String toActionString(){
+        String str = "";
+        str += Integer.toString(this.playerid);
+        str += " ";
+        str += Integer.toString(this.chessid);
+        str += " ";
+        str += Integer.toString(this.action);
+        str += " ";
+        str += Integer.toString(this.step);
+        return str;
+    }
 }
