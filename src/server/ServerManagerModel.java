@@ -27,25 +27,11 @@ public class ServerManagerModel {
      */
 
     class MyClient extends Thread{
-        private Socket client;//client 和他的接收线程的生命周期一致
+        private Socket client;
 
         public volatile boolean exitRecvThread =false;
         private BufferedReader is ;
         private PrintWriter os ;
-
-        @Override   //Recv线程  (recv from client)
-        public void run() {
-            while (!exitRecvThread) {
-
-                //recv protocol(msg from client)
-
-                //send
-
-            }
-        }
-        public void exitRecvThread(){
-            exitRecvThread=true;
-        }
 
         MyClient(Socket i){
             this.client=i;
@@ -60,7 +46,36 @@ public class ServerManagerModel {
 
         }
 
-        public void send(String msg){
+        @Override   //Recv线程  (recv from client)
+        public void run() {
+            while (!exitRecvThread) {
+
+                //recv protocol(msg from server)
+                String msg;
+
+                try {
+                    if (is.ready()) {
+                        msg = is.readLine();
+                        if (!msg.equals("")) {
+                            System.out.println("msg from server:"+msg);
+
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //sendToClient
+
+            }
+        }
+        //用于退出recv线程
+        public void exitRecvThread(){
+            exitRecvThread=true;
+        }
+
+
+
+        public void sendToClient(String msg){
             //后期改造成protocol对象序列化传送
             os.print(msg);
             os.flush();
@@ -93,17 +108,17 @@ public class ServerManagerModel {
 
                 MyClient clientTmp=new MyClient(client);
 
-                //add lock 多线程可能会产生return的size不一致
+
                 vec_clients.add(clientTmp);
                 map_client2Index.put(client,new Integer(vec_clients.size()-1));
-                //release lock
+
 
 
                 BufferedReader sin=new BufferedReader(new InputStreamReader(System.in));
 
                 String inputString="Hello,tcp client\n";
 
-                clientTmp.send(inputString);
+                clientTmp.sendToClient(inputString);
 
             } catch (IOException e) {
                 e.printStackTrace();

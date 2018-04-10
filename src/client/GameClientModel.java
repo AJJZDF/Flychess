@@ -35,7 +35,7 @@ public class GameClientModel {
                     // TODO 自动生成的 catch 块
                     e.printStackTrace();
                 }
-                //send
+                //sendToClient
 
             }
         }
@@ -59,7 +59,7 @@ public class GameClientModel {
 
         }
 
-        public void send(String msg){
+        public void send2Server(String msg){
             //后期改造成protocol对象序列化传送
             os.print(msg);
             os.flush();
