@@ -11,6 +11,7 @@ public class Protocol implements Serializable {
     //      可选棋子
     //     逻辑序列
     public enum msgFromServer{
+        NowYourColor,           //自身被初始化的颜色
         WhoseTurn,              //谁的回合
         ChessToChoose,          //可选棋子
         LogicSerial             //逻辑序列
