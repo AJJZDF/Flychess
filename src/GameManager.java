@@ -395,7 +395,7 @@ public class GameManager{
                     if(!chess.eatTest(chessboard[chess.getPos()]))
                     {
                         //移动
-                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
                         queue.enqueue(action);
                     }
 
@@ -422,9 +422,7 @@ public class GameManager{
                     //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                     else if(chess.eatTest(chessboard[chess.getPos()]))
                     {
-                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
-                        queue.enqueue(action);
-                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
                         queue.enqueue(action);
                         for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                         {
@@ -707,7 +705,7 @@ public class GameManager{
 
                             if(!chess.eatTest(chessboard[chess.getPos()]))
                             {
-                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
                                 queue.enqueue(action);
                             }
 
@@ -731,9 +729,7 @@ public class GameManager{
                             //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                             else if(chess.eatTest(chessboard[chess.getPos()]))
                             {
-                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
-                                queue.enqueue(action);
-                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
                                 queue.enqueue(action);
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                 {
@@ -768,7 +764,7 @@ public class GameManager{
                             int attackpos = chess.getAttackPos();
                             if(chess.attackTest(chessboard[attackpos]))
                             {
-                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,2);
                                 queue.enqueue(action);
 
                                 //记得修改玩家的棋子和棋盘
@@ -789,7 +785,7 @@ public class GameManager{
                                 if(!testchess.eatTest(chessboard[testchess.getPos()]))
                                 {
                                     //踢完人继续走
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
                                     queue.enqueue(action);
                                 }
                             }
@@ -800,7 +796,7 @@ public class GameManager{
                                 if(!testchess.eatTest(chessboard[testchess.getPos()]))
                                 {
                                     //直接飞过对面
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,6);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,6);
                                     queue.enqueue(action);
                                 }
                             }
@@ -832,17 +828,13 @@ public class GameManager{
                                 if(chess.attackTest(chessboard[attackpos]))
                                 {
                                     //踢完人继续走
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
-                                    queue.enqueue(action);
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
                                     queue.enqueue(action);
                                 }
                                 else
                                 {
                                     //直接飞过对面
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
-                                    queue.enqueue(action);
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,5);
                                     queue.enqueue(action);
                                 }
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
@@ -881,7 +873,7 @@ public class GameManager{
 
                                 if(!chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
                                     queue.enqueue(action);
                                 }
 
@@ -901,9 +893,7 @@ public class GameManager{
                                 //吃掉
                                 else if(chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
-                                    queue.enqueue(action);
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
                                     queue.enqueue(action);
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
@@ -939,7 +929,7 @@ public class GameManager{
 
                                 if(!chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
                                     queue.enqueue(action);
                                 }
 
@@ -959,9 +949,7 @@ public class GameManager{
                                 //吃掉
                                 else if(chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
-                                    queue.enqueue(action);
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
                                     queue.enqueue(action);
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
