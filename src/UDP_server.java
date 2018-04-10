@@ -14,7 +14,7 @@ public class UDP_server {//send udp  广播udp
     private Queue<String> queueClient;
     // Use this port to send broadcast packet
     @SuppressWarnings("resource")
-    final DatagramSocket detectSocket;
+    private final DatagramSocket detectSocket;
 
     //接收线程在等到三个玩家回应UDP广播后结束，三个玩家的地址存在queueClient里
     class recMsg extends Thread{
@@ -42,7 +42,7 @@ public class UDP_server {//send udp  广播udp
 
                 //把响应广播的局域网地址，加入到外部类的队列。形式为"/192.168.1.136:8888"
                 boolean checkSuccess= UDP_server.this.queuePush(packet.getSocketAddress().toString());
-                if(!checkSuccess)break;
+                if(!checkSuccess)break;//线程退出出口
 
 
                 System.out.println(rcvd);
