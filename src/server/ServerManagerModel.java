@@ -1,5 +1,7 @@
 package server;
 
+import protocol.Protocol;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,6 +11,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+
+import static java.lang.Thread.sleep;
 
 public class ServerManagerModel {
 
@@ -21,7 +25,7 @@ public class ServerManagerModel {
     /*
     1.自动匹配功能：申请了‘匹配’命令的人会被加入一个列表，在该列表中组成四人房间
     2.房间功能：
-                服务器每隔几秒发送当前房间列表
+                client发送刷新命令（获取当前的房间列表）给server
                 client收到房间列表之后，一旦点击，则可以发送申请加入的消息。超过三个人的时候返回加入失败的信息，房间已满或者已经开始游戏返回相应信息。
 
      */
@@ -80,6 +84,11 @@ public class ServerManagerModel {
             os.print(msg);
             os.flush();
         }
+
+        public void send2Client(Protocol msg){
+            //protocol对象序列化传送
+            Protocol.socketSerilize(client,msg);
+        }
     }
 
 
@@ -113,12 +122,20 @@ public class ServerManagerModel {
                 map_client2Index.put(client,new Integer(vec_clients.size()-1));
 
 
+                clientTmp.start();
 
                 BufferedReader sin=new BufferedReader(new InputStreamReader(System.in));
 
                 String inputString="Hello,tcp client\n";
 
-                clientTmp.sendToClient(inputString);
+                Protocol msg=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
+                msg.set_msgFromServer(Protocol.MsgFromServer.ChessToChoose);
+
+                clientTmp.send2Client(msg);
+                //clientTmp.sendToClient(inputString);
+
+
+                clientTmp.send2Client(msg);
 
             } catch (IOException e) {
                 e.printStackTrace();

@@ -1,9 +1,8 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import protocol.Protocol;
+
+import java.io.*;
 import java.net.Socket;
 
 public class GameClientModel {
@@ -22,21 +21,30 @@ public class GameClientModel {
 
                 //recv protocol(msg from server)
                 String msg;
-
-                try {
-                    if (is.ready()) {
-                        msg = is.readLine();
-                        if (!msg.equals("")) {
-                            System.out.println("msg from server:"+msg);
-
-                        }
-                    }
-                } catch (IOException e) {
-                    // TODO 自动生成的 catch 块
-                    e.printStackTrace();
-                }
+//
+//                try {
+//                    if (is.ready()) {
+//                        msg = is.readLine();
+//                        if (!msg.equals("")) {
+//                            System.out.println("msg from server:"+msg);
+//
+//                        }
+//                    }
+//                } catch (IOException e) {
+//                    // TODO 自动生成的 catch 块
+//                    e.printStackTrace();
+//                }
                 //sendToClient
 
+                Protocol recvMsg = Protocol.socketUnSerilize(server);
+                if(recvMsg!=null)
+                    System.out.println(recvMsg);
+
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         public void exitRecvThread(){
@@ -63,6 +71,12 @@ public class GameClientModel {
             //后期改造成protocol对象序列化传送
             os.print(msg);
             os.flush();
+
+        }
+
+        public void send2Server(Protocol msg){
+            //protocol对象序列化传送
+            Protocol.socketSerilize(server,msg);
         }
     }
 
