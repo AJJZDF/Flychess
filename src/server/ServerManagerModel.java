@@ -55,20 +55,16 @@ public class ServerManagerModel {
             while (!exitRecvThread) {
 
                 //recv protocol(msg from server)
-                String msg;
+                Protocol recvMsg = Protocol.socketUnSerilize(client);
+                if(recvMsg!=null)
+                    System.out.println(recvMsg);
 
+                else System.out.println("recv null");
                 try {
-                    if (is.ready()) {
-                        msg = is.readLine();
-                        if (!msg.equals("")) {
-                            System.out.println("msg from server:"+msg);
-
-                        }
-                    }
-                } catch (IOException e) {
+                    sleep(1000);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //sendToClient
 
             }
         }
@@ -79,7 +75,7 @@ public class ServerManagerModel {
 
 
 
-        public void sendToClient(String msg){
+        public void send2Client(String msg){
             //后期改造成protocol对象序列化传送
             os.print(msg);
             os.flush();
@@ -112,28 +108,22 @@ public class ServerManagerModel {
         while(true){
             try {
                 //收到一个client，首先将其push进去vec列表，
-                //然后新建client_recv_thread去创建接受进程
+
                 client = serverSocket.accept();
 
                 MyClient clientTmp=new MyClient(client);
-
-
                 vec_clients.add(clientTmp);
                 map_client2Index.put(client,new Integer(vec_clients.size()-1));
-
-
+                //然后新建client_recv_thread  接收线程
                 clientTmp.start();
 
-                BufferedReader sin=new BufferedReader(new InputStreamReader(System.in));
-
-                String inputString="Hello,tcp client\n";
+                //BufferedReader sin=new BufferedReader(new InputStreamReader(System.in));
 
                 Protocol msg=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
-                msg.set_msgFromServer(Protocol.MsgFromServer.ChessToChoose);
+                msg.set_msgFromServer(Protocol.GameMsgFromServer.ChessToChoose);
 
                 clientTmp.send2Client(msg);
-                //clientTmp.sendToClient(inputString);
-
+                //clientTmp.send2Client("Hello,tcp client\n");
 
                 clientTmp.send2Client(msg);
 

@@ -34,12 +34,13 @@ public class GameClientModel {
 //                    // TODO 自动生成的 catch 块
 //                    e.printStackTrace();
 //                }
-                //sendToClient
+                //send2Client
 
                 Protocol recvMsg = Protocol.socketUnSerilize(server);
                 if(recvMsg!=null)
                     System.out.println(recvMsg);
 
+                else System.out.println("recv null");
                 try {
                     sleep(1000);
                 } catch (InterruptedException e) {

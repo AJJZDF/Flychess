@@ -9,10 +9,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
 
-public class UDP_server {//sendToClient udp  广播udp
+public class UDP_server {//send2Client udp  广播udp
     //接收
     private Queue<String> queueClient;
-    // Use this port to sendToClient broadcast packet
+    // Use this port to send2Client broadcast packet
     @SuppressWarnings("resource")
     private final DatagramSocket detectSocket;
 
