@@ -22,6 +22,9 @@ public class Action
 
     public static int ACTIVATE = 9;     //当前棋子为可选状态
 
+    public static int TURNLEFT = 12;    //左转
+
+
     private int playerid;       //第几个玩家，从0开始数起
     private int chessid;        //玩家的第几个棋子，从0开始数起
     private int action;         //指令类型
@@ -113,6 +116,10 @@ public class Action
         else if(action == TURNRIGHT)
         {
             return (str + "turnright");
+        }
+        else if(action == TURNLEFT)
+        {
+            return (str + "turnleft");
         }
         else return (str + "quick_move " +str1);
     }

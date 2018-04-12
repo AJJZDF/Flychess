@@ -245,12 +245,83 @@ public class GameManager{
     {
         return (player[getTurn()].getKind() == BasicAI.AUTOAI || player[getTurn()].getKind() == BasicAI.PLAYERAI );
     }
-
-
     public boolean isAI(int playid)
     {
         //没加范围检测，应该不会有问题吧...
         return (player[playid].getKind() == BasicAI.AUTOAI || player[playid].getKind() == BasicAI.PLAYERAI );
+    }
+
+
+    private static final int RIGHT = 1;
+    private static final int LEFT = 2;
+    private static final int NOTURN = 3;
+
+    //转向测试
+    private static int turnTest(int prePos,int afterPos)
+    {
+        if((prePos == 0 || (prePos <= 51 && prePos > 47 ) ) && afterPos > 1 && afterPos <= 4) return RIGHT;
+        if(prePos <= 4 && afterPos >= 5) return LEFT;
+        if(prePos < 8 && afterPos > 8) return RIGHT;
+        if(prePos < 14 && afterPos > 14) return RIGHT;
+        if(prePos <= 17 && afterPos >= 18) return LEFT;
+        if(prePos < 21 && afterPos > 21) return RIGHT;
+        if(prePos < 27 && afterPos > 27) return RIGHT;
+        if(prePos <= 30 && afterPos >= 31) return LEFT;
+        if(prePos < 34 && afterPos > 34) return RIGHT;
+        if(prePos < 40 && afterPos > 40) return RIGHT;
+        if(prePos <= 43 && afterPos >= 44) return LEFT;
+        if(prePos < 47 && afterPos > 47) return RIGHT;
+        return NOTURN;
+    }
+    private static boolean turnLeftTest(int prePos,int afterPos)
+    {
+        if(prePos <= 4 && afterPos >= 5) return true;
+        if(prePos <= 17 && afterPos >= 18) return true;
+        if(prePos <= 30 && afterPos >= 31) return true;
+        if(prePos <= 43 && afterPos >= 44) return true;
+        return false;
+    }
+    private static boolean turnRightTest(int prePos,int afterPos)
+    {
+        if((prePos == 0 || (prePos <= 51 && prePos > 47 ) ) && afterPos > 1 && afterPos <= 4) return true;
+        if(prePos < 8 && afterPos > 8) return true;
+        if(prePos < 14 && afterPos > 14) return true;
+        if(prePos < 21 && afterPos > 21) return true;
+        if(prePos < 27 && afterPos > 27) return true;
+        if(prePos < 34 && afterPos > 34) return true;
+        if(prePos < 40 && afterPos > 40) return true;
+        if(prePos < 47 && afterPos > 47) return true;
+        return false;
+    }
+    private static int getRightCorner(int prePos,int afterPos)
+    {
+        if(prePos < 8 && afterPos > 8) return 8;
+        if(prePos < 14 && afterPos > 14) return 14;
+        if(prePos < 21 && afterPos > 21) return 21;
+        if(prePos < 27 && afterPos > 27) return 27;
+        if(prePos < 34 && afterPos > 34) return 34;
+        if(prePos < 40 && afterPos > 40) return 40;
+        if(prePos < 47 && afterPos > 47) return 47;
+        if((prePos == 0 || (prePos <= 51 && prePos >47 )) && afterPos > 1) return 1;
+        return -1;
+    }
+    private static int getLeftCorner(int prePos,int afterPos)
+    {
+        if(prePos <= 4 && afterPos >= 5) return 5;
+        if(prePos <= 17 && afterPos >= 18) return 18;
+        if(prePos <= 30 && afterPos >= 31) return 31;
+        if(prePos <= 43 && afterPos >= 44) return 44;
+        return -1;
+    }
+    private static boolean isLeftCorner(int pos)
+    {
+        if(pos == 5 || pos == 18 || pos == 31 || pos == 44) return true;
+        return false;
+    }
+    private static boolean isRightCorner(int pos)
+    {
+        if(pos == 8 || pos == 14 || pos == 21 || pos == 27 || pos == 34 || pos == 40 || pos == 47 || pos == 1) return true;
+        return false;
     }
 
     //用户选完棋子后，产生的一系列动作
@@ -269,6 +340,7 @@ public class GameManager{
         Chess chess;
         int playerid = getTurn();
         int chessindex = choice;
+        int currPos = -1, leftStep = -1,turnKind = NOTURN,currStep = -1;
         if(chessindex < 0)
         {
             nextTurn();
@@ -278,6 +350,7 @@ public class GameManager{
         {
             chess = new Chess(player[playerid].getChess(chessindex));
             //位于停机坪
+            //finish
             if(chess.getStatus() == Chess.STATUS_AIRPORT)
             {
                 if(dice >= 5 && dice <= 6)
@@ -310,16 +383,52 @@ public class GameManager{
                 }
             }
             //位于起飞点
+            //finish
             else if(chess.getStatus() == Chess.STATUS_STARTLINE)
             {
+                currPos = chess.getPos();
                 chess.setStatus(Chess.STATUS_FLYING);
                 chess.setPos((chess.getPos() + dice) % 52);
+                leftStep = dice;
 
                 if(!chess.eatTest(chessboard[chess.getPos()]))
                 {
-                    //初步移动
-                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
+//                    //初步移动
+//                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
+//                    queue.enqueue(action);
+
+                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                     queue.enqueue(action);
+                    currPos = (currPos + 1)%52;
+                    leftStep -= 1;
+
+                    action = new Action(playerid,chessindex,Action.TURNLEFT);
+                    queue.enqueue(action);
+
+                    if(leftStep != 0)
+                    {
+                        //需要左转
+                        if(leftStep >= 4)
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.TURNLEFT);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep - 3);
+                            queue.enqueue(action);
+                            currPos = (currPos + leftStep) % 52;
+                            leftStep = 0;
+                        }
+                        //直接走
+                        else
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                            queue.enqueue(action);
+                            currPos = (currPos + leftStep)%52;
+                            leftStep -= leftStep;
+
+                        }
+                    }
                 }
 
                 //可以和自己人合体
@@ -344,8 +453,61 @@ public class GameManager{
                 //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                 else if(chess.eatTest(chessboard[chess.getPos()]))
                 {
-                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - 1);
-                    if(dice - 1 != 0) queue.enqueue(action);
+//                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - 1);
+//                    if(dice - 1 != 0) queue.enqueue(action);
+
+                    boolean lefflag = false;
+
+                    if(dice - 1 != 0)
+                    {
+//                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - 1);
+//                        queue.enqueue(action);
+
+                        leftStep = dice -1;
+                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                        queue.enqueue(action);
+                        currPos = (currPos + 1)%52;
+                        leftStep -= 1;
+
+                        //左转
+                        action = new Action(playerid,chessindex,Action.TURNLEFT);
+                        queue.enqueue(action);
+
+                        if(leftStep != 0)
+                        {
+                            //需要左转
+                            if(leftStep >= 4)
+                            {
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep - 3);
+                                queue.enqueue(action);
+                                currPos = (currPos + leftStep) % 52;
+                                leftStep = 0;
+                            }
+                            else if(leftStep == 3)
+                            {
+                                lefflag = true;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep + 1);
+                                queue.enqueue(action);
+                                currPos = (currPos + leftStep)%52;
+                                leftStep -= leftStep;
+                                action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                queue.enqueue(action);
+
+                            }
+                            else
+                            {
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                                queue.enqueue(action);
+                                currPos = (currPos + leftStep)%52;
+                                leftStep -= leftStep;
+                            }
+                        }
+                    }
+
 
                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                     {
@@ -354,8 +516,47 @@ public class GameManager{
                         action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                         queue.enqueue(action);
                     }
-                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
-                    queue.enqueue(action);
+
+//                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+//                    queue.enqueue(action);
+
+                    leftStep = 1;
+                    turnKind = turnTest(currPos,currPos + 1);
+                    //需要左转
+                    if(turnKind == LEFT)
+                    {
+                        if(lefflag)
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                            queue.enqueue(action);
+                            leftStep -= 1;
+                            currPos = (currPos + 1)%52;
+                        }
+                        else
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.TURNLEFT);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                            queue.enqueue(action);
+                            leftStep -= 1;
+                            currPos = (currPos + 1)%52;
+                        }
+
+                    }
+                    else
+                    {
+                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                        queue.enqueue(action);
+                        if(isRightCorner(currPos + 1))
+                        {
+                            action = new Action(playerid,chessindex,Action.TURNLEFT);
+                            queue.enqueue(action);
+                        }
+                        leftStep = 0;
+                        currPos = (currPos + 1)%52;
+                    }
 
                     //更新棋盘
                     chessboard[chess.getPos()] = new Chess(chess);
@@ -390,13 +591,75 @@ public class GameManager{
                     chessboard[chess.getPos()].setStatus(Chess.STATUS_EMPTY);
                     chessboard[chess.getPos()].clearIndexList();
 
+                    currPos = chess.getPos();
                     chess.setPos((chess.getPos() + 4)%52);
+                    leftStep = 4;
 
                     if(!chess.eatTest(chessboard[chess.getPos()]))
                     {
                         //移动
-                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
-                        queue.enqueue(action);
+//                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+//                        queue.enqueue(action);
+                        turnKind = turnTest(currPos,currPos + leftStep);
+                        if(turnKind == LEFT)
+                        {
+                            //quickmove很烦啊，还要判断下是不是偶数，不是偶数需要分解
+                            if((getLeftCorner(currPos,currPos + leftStep) - currPos)%2 == 0)
+                            {
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,getLeftCorner(currPos,currPos + leftStep) - currPos);
+                                queue.enqueue(action);
+                            }
+                            else
+                            {
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,getLeftCorner(currPos,currPos + leftStep) - currPos -1);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                queue.enqueue(action);
+                            }
+                            leftStep -= (getLeftCorner(currPos,currPos + leftStep) - currPos - 1);
+                            action = new Action(playerid,chessindex,Action.TURNLEFT);
+                            queue.enqueue(action);
+                            //warning:quick move without check
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                            queue.enqueue(action);
+                            leftStep = 0;
+                            currPos = (currPos + 4)%52;
+                        }
+                        else if(turnKind == RIGHT)
+                        {
+                            if((getRightCorner(currPos,currPos + leftStep) - currPos)%2 == 0)
+                            {
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,getRightCorner(currPos,currPos + leftStep) - currPos);
+                                queue.enqueue(action);
+                            }
+                            else
+                            {
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,getRightCorner(currPos,currPos + leftStep) - currPos -1);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                queue.enqueue(action);
+                            }
+                            leftStep -= (getRightCorner(currPos,currPos + leftStep) - currPos);
+                            action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                            queue.enqueue(action);
+                            leftStep -= leftStep;
+                            currPos = (currPos + 4)%52;
+                        }
+                        else
+                        {
+                            //移动
+                            action = new Action(playerid,chessindex,Action.QUICK_MOVE,leftStep);
+                            queue.enqueue(action);
+                            if(isRightCorner((currPos + leftStep)%52))
+                            {
+                                action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                queue.enqueue(action);
+                            }
+                            leftStep -= leftStep;
+                            currPos = (currPos + leftStep)%52;
+                        }
                     }
 
 
@@ -422,8 +685,43 @@ public class GameManager{
                     //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                     else if(chess.eatTest(chessboard[chess.getPos()]))
                     {
-                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
+//                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+//                        queue.enqueue(action);
+//                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+//                        queue.enqueue(action);
+
+                        leftStep = 2;
+                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
                         queue.enqueue(action);
+                        if(isRightCorner(currPos + leftStep))
+                        {
+                            action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                            queue.enqueue(action);
+                        }
+
+                        leftStep = 1;
+                        currPos = currPos + 2;
+
+                        turnKind = turnTest(currPos,currPos + 1);
+
+                        if(turnKind == LEFT)
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.TURNLEFT);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                            queue.enqueue(action);
+                        }
+                        else
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                            queue.enqueue(action);
+                        }
+
+                        leftStep = 0;
+                        currPos = currPos + 1;
+
                         for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                         {
                             //坠落，回到停机坪
@@ -433,6 +731,8 @@ public class GameManager{
                         }
                         action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                         queue.enqueue(action);
+                        leftStep = 0;
+                        currPos = currPos + 1;
 
                         //更新棋盘
                         chessboard[chess.getPos()] = new Chess(chess);
@@ -460,6 +760,7 @@ public class GameManager{
             {
 
                 //是否接近终点线？？？
+                //finish
                 if(chess.presprint(dice))
                 {
                     //是否可以合并自己人？？
@@ -471,6 +772,8 @@ public class GameManager{
                     chessboard[chess.getPos()].clearIndexList();
 
                     int lastposition = chess.getPos();
+                    currPos = chess.getPos();
+
 
 
                     chess.setEndLine(dice);
@@ -481,8 +784,31 @@ public class GameManager{
 
                     if(lastposition != chess.getEntry())
                     {
-                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,chess.getEntry() - lastposition);
-                        queue.enqueue(action);
+//                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,chess.getEntry() - lastposition);
+//                        queue.enqueue(action);
+
+                        leftStep = chess.getEntry() - lastposition;
+
+                        turnKind = turnTest(currPos,(currPos + leftStep)%52) ;
+
+                        if(turnKind == RIGHT)
+                        {
+                            currStep = getRightCorner(currPos,(currPos+leftStep)%52) - currPos;
+                            if(currStep < 0) currStep += 52;
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                            queue.enqueue(action);
+                            leftStep -= currStep;
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                            queue.enqueue(action);
+                        }
+                        else
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                            queue.enqueue(action);
+                        }
+
                         action = new Action(playerid,chessindex,Action.TURNRIGHT);
                         queue.enqueue(action);
                         action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - (chess.getEntry() - lastposition));
@@ -540,6 +866,7 @@ public class GameManager{
 
                 }
                 //是否已经进入终点线
+                //finish
                 else if(chess.sprint())
                 {
 
@@ -627,13 +954,143 @@ public class GameManager{
                     chessboard[chess.getPos()].setStatus(Chess.STATUS_EMPTY);
                     chessboard[chess.getPos()].clearIndexList();
 
+                    currPos = chess.getPos();//29
+                    leftStep = dice;//6
+
                     //基础移动
                     chess.setPos((chess.getPos() + dice) % 52);
 
                     if( !chess.eatTest(chessboard[chess.getPos()]))
                     {
-                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
-                        queue.enqueue(action);
+//                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
+//                        queue.enqueue(action);
+
+                        turnKind = turnTest(currPos,(currPos + leftStep) % 52);
+
+                        boolean changeturn = false;
+                        boolean turnlef = false;
+                        boolean turnrig = false;
+                        boolean emptySpace = false;
+
+                        //需要左转
+                        if(turnKind == LEFT)
+                        {
+
+                            currStep = getLeftCorner(currPos,(currPos + leftStep) % 52) - currPos;// 2
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.TURNLEFT);
+                            queue.enqueue(action);
+
+                            leftStep -= (currStep - 1);//5
+                            currPos = (currPos + currStep - 1)%52;//30
+                            if(currStep -1 == 0) emptySpace = true;
+                            changeturn = true;
+                            turnlef = true;
+                        }
+                        //需要右转
+                        else if(turnKind == RIGHT)
+                        {
+
+                            currStep = getRightCorner(currPos,(currPos + leftStep) % 52) - currPos;
+                            if(currStep < 0) currStep += 52;
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                            queue.enqueue(action);
+                            action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                            queue.enqueue(action);
+                            leftStep -= currStep;
+                            currPos = (currPos + currStep)%52;
+                            changeturn = true;
+                            turnrig = true;
+                        }
+                        else
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
+                            queue.enqueue(action);
+                            if(isRightCorner((currPos + dice)%52))
+                            {
+                                action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                queue.enqueue(action);
+                            }
+                            currPos = (currPos + dice)%52;
+                            leftStep -= dice;
+                            changeturn = false;
+                        }
+
+                        if(changeturn)
+                        {
+                            // 30 30+5
+                            turnKind = turnTest(currPos,(currPos + leftStep) % 52);//LEFT
+
+                            if(emptySpace){
+
+                                if(turnRightTest(currPos,(currPos + leftStep) %52)){
+                                    turnKind = RIGHT;
+                                }
+                            }
+                            if(turnlef)
+                            {
+                                if(turnRightTest(currPos,(currPos + leftStep) %52)){
+                                    turnKind = RIGHT;
+                                }
+                            }
+                            if(turnrig)
+                            {
+                                if(turnLeftTest(currPos,(currPos + leftStep)%52))
+                                {
+                                    turnKind = LEFT;
+                                }
+                            }
+
+                            //需要左转
+                            if(turnKind == LEFT && !turnlef)
+                            {
+                                currStep = getLeftCorner(currPos,(currPos + leftStep) % 52) - currPos;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                queue.enqueue(action);
+                                leftStep -= (currStep - 1);
+                                currPos = (currPos + currStep - 1)%52;
+
+                                currStep = leftStep;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                                queue.enqueue(action);
+                                leftStep -= leftStep;
+                                currPos = (currPos + leftStep)%52;
+                            }
+                            //需要右转
+                            else if(turnKind == RIGHT && !turnrig)
+                            {
+                                currStep = getRightCorner(currPos,(currPos + leftStep) % 52) - currPos;
+                                if(currStep < 0) currStep += 52;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                queue.enqueue(action);
+                                leftStep -= currStep;
+                                currPos = (currPos + currStep)%52;
+
+                                currStep = leftStep;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                                queue.enqueue(action);
+                                leftStep -= leftStep;
+                                currPos = (currPos + leftStep)%52;
+
+                            }
+                            else
+                            {
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                                queue.enqueue(action);
+                                if(isRightCorner((currPos + leftStep)%52))
+                                {
+                                    action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                    queue.enqueue(action);
+                                }
+                                currPos = (currPos + leftStep)%52;
+                                leftStep -= leftStep;
+                            }
+                        }
                     }
 
                     //可以和自己人合体
@@ -656,8 +1113,65 @@ public class GameManager{
                     //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                     else if(chess.eatTest(chessboard[chess.getPos()]))
                     {
-                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - 1);
-                        if(dice - 1 != 0) queue.enqueue(action);
+                        boolean lefflag = false;
+
+                        if(dice - 1 != 0)
+                        {
+//                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - 1);
+//                            queue.enqueue(action);
+
+                            leftStep = dice -1;
+                            boolean changeturn = false;
+                            boolean turnlef = false;
+                            boolean turnrig = false;
+                            turnKind = turnTest(currPos,currPos + leftStep);
+                            if(turnKind == LEFT)
+                            {
+                                currStep = getLeftCorner(currPos,(currPos + leftStep)%52) - currPos;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                queue.enqueue(action);
+                                leftStep -= (currStep - 1);
+                                currPos = (currPos + currStep - 1)%52;
+                                changeturn = true;
+                                turnlef = true;
+                            }
+                            else if(turnKind == RIGHT)
+                            {
+                                currStep = getRightCorner(currPos,(currPos + leftStep) %52) - currPos;
+                                if(currStep < 0) currStep += 52;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                queue.enqueue(action);
+                                leftStep -= currStep;
+                                currPos = (currPos + currStep)%52;
+                                changeturn = true;
+                                turnrig = true;
+                            }
+                            else if(isLeftCorner((currPos + dice)))
+                            {
+                                lefflag = true;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep + 1);
+                                queue.enqueue(action);
+                                currPos = (currPos + currStep)%52;
+                                leftStep -= leftStep;
+                                action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                queue.enqueue(action);
+                            }
+                            else
+                            {
+
+                                currStep = leftStep;
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                                queue.enqueue(action);
+                                currPos = (currPos + currStep)%52;
+                                leftStep -= leftStep;
+
+
+                            }
+                        }
 
                         for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                         {
@@ -666,8 +1180,41 @@ public class GameManager{
                             action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                             queue.enqueue(action);
                         }
-                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
-                        queue.enqueue(action);
+
+                        turnKind = turnTest(currPos,(currPos + 1)%52);
+                        if(turnKind == LEFT)
+                        {
+                            if(lefflag)
+                            {
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                queue.enqueue(action);
+                                leftStep -= 1;
+                                currPos = (currPos + 1)%52;
+                            }
+                            else
+                            {
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                queue.enqueue(action);
+                                leftStep -= 1;
+                                currPos = (currPos + 1)%52;
+                            }
+                        }
+                        else
+                        {
+                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                            queue.enqueue(action);
+                            if(isRightCorner(currPos + 1))
+                            {
+                                action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                queue.enqueue(action);
+                            }
+                            leftStep -= 1;
+                            currPos = (currPos + 1)%52;
+                        }
                         //更新棋盘
                         chessboard[chess.getPos()] = new Chess(chess);
                     }
@@ -701,11 +1248,17 @@ public class GameManager{
                             chessboard[chess.getPos()].clearIndexList();
 
                             //再移动
+                            leftStep = 4;
+                            currPos = chess.getPos();
                             chess.setPos((chess.getPos() + 4)%52);
 
                             if(!chess.eatTest(chessboard[chess.getPos()]))
                             {
-                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                 queue.enqueue(action);
                             }
 
@@ -729,7 +1282,9 @@ public class GameManager{
                             //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                             else if(chess.eatTest(chessboard[chess.getPos()]))
                             {
-                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex, Action.TURNLEFT);
                                 queue.enqueue(action);
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                 {
@@ -762,9 +1317,12 @@ public class GameManager{
                             queue.enqueue(action);
 
                             int attackpos = chess.getAttackPos();
+
+                            boolean isAttack = false;
+
                             if(chess.attackTest(chessboard[attackpos]))
                             {
-                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,2);
+                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
                                 queue.enqueue(action);
 
                                 //记得修改玩家的棋子和棋盘
@@ -785,9 +1343,10 @@ public class GameManager{
                                 if(!testchess.eatTest(chessboard[testchess.getPos()]))
                                 {
                                     //踢完人继续走
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
                                     queue.enqueue(action);
                                 }
+                                isAttack = true;
                             }
                             else
                             {
@@ -796,7 +1355,7 @@ public class GameManager{
                                 if(!testchess.eatTest(chessboard[testchess.getPos()]))
                                 {
                                     //直接飞过对面
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,6);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,6);
                                     queue.enqueue(action);
                                 }
                             }
@@ -825,16 +1384,20 @@ public class GameManager{
                             //吃掉
                             else if(chess.eatTest(chessboard[chess.getPos()]))
                             {
-                                if(chess.attackTest(chessboard[attackpos]))
+                                if(isAttack)
                                 {
                                     //踢完人继续走
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                 }
                                 else
                                 {
                                     //直接飞过对面
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,5);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                 }
                                 for(Pair pair:chessboard[chess.getPos()].getIndexlist())
@@ -852,6 +1415,8 @@ public class GameManager{
                             action = new Action(playerid,chessindex,Action.TURNRIGHT);
                             queue.enqueue(action);
 
+
+
                             //更新棋盘
                             chessboard[chess.getPos()] = new Chess(chess);
                             //更新自己的棋子
@@ -859,6 +1424,11 @@ public class GameManager{
 
                             if(!flag)
                             {
+                                action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                queue.enqueue(action);
+                                action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                queue.enqueue(action);
+
 
                                 //直接删除棋盘，因为还要继续跳
                                 chessboard[chess.getPos()].setStatus(Chess.STATUS_EMPTY);
@@ -869,11 +1439,15 @@ public class GameManager{
                                 //会有人吗？
                                 //会是自己人吗，还是其他人
 
+                                currPos = chess.getPos();
+                                leftStep = 4;
                                 chess.setPos((chess.getPos() + 4)%52);
 
                                 if(!chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.TURNRIGHT);
                                     queue.enqueue(action);
                                 }
 
@@ -893,7 +1467,9 @@ public class GameManager{
                                 //吃掉
                                 else if(chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
+                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                                     queue.enqueue(action);
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
@@ -903,6 +1479,8 @@ public class GameManager{
                                         queue.enqueue(action);
                                     }
                                     action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                    queue.enqueue(action);
+                                    action = new Action(playerid,chessindex,Action.TURNRIGHT);
                                     queue.enqueue(action);
                                 }
 
@@ -924,13 +1502,87 @@ public class GameManager{
                                 //前进
                                 //前面有人吗？
                                 //自己人还是别人？
-
+                                currPos = chess.getPos();
+                                leftStep = 4;
                                 chess.setPos((chess.getPos() + 4)%52);
 
                                 if(!chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,4);
-                                    queue.enqueue(action);
+//                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+//                                    queue.enqueue(action);
+
+                                    turnKind = turnTest(currPos,(currPos + leftStep) %52);
+                                    if(turnKind == LEFT)
+                                    {
+                                        //quickmove很烦啊，还要判断下是不是偶数，不是偶数需要分解
+                                        if((getLeftCorner(currPos,currPos + leftStep) - currPos)%2 == 0)
+                                        {
+                                            action = new Action(playerid,chessindex,Action.QUICK_MOVE,getLeftCorner(currPos,currPos + leftStep) - currPos);
+                                            queue.enqueue(action);
+                                        }
+                                        else
+                                        {
+                                            if(getLeftCorner(currPos,currPos + leftStep) - currPos -1 != 0)
+                                            {
+                                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,getLeftCorner(currPos,currPos + leftStep) - currPos -1);
+                                                queue.enqueue(action);
+                                            }
+                                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                            queue.enqueue(action);
+                                        }
+                                        leftStep -= (getLeftCorner(currPos,currPos + leftStep) - currPos - 1);
+                                        action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                        queue.enqueue(action);
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                                        queue.enqueue(action);
+                                        leftStep = 0;
+                                        currPos = (currPos + 4)%52;
+                                        if(isRightCorner(currPos))
+                                        {
+                                            action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                            queue.enqueue(action);
+                                        }
+                                    }
+                                    else if(turnKind == RIGHT)
+                                    {
+                                        currStep = getRightCorner(currPos,(currPos + leftStep)%52) - currPos;
+                                        if(currStep < 0) currStep += 52;
+
+                                        if(currStep%2 == 0)
+                                        {
+                                            action = new Action(playerid,chessindex,Action.QUICK_MOVE,currStep);
+                                            queue.enqueue(action);
+                                        }
+                                        else
+                                        {
+                                            action = new Action(playerid,chessindex,Action.QUICK_MOVE,currStep - 1);
+                                            if(currStep - 1 != 0) queue.enqueue(action);
+                                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                            queue.enqueue(action);
+                                        }
+                                        leftStep -= currStep;
+
+                                        action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                        queue.enqueue(action);
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                                        queue.enqueue(action);
+                                        leftStep -= leftStep;
+                                        currPos = (currPos + 4)%52;
+
+                                    }
+                                    else
+                                    {
+                                        //移动
+                                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
+                                        queue.enqueue(action);
+                                        if(isRightCorner((currPos + leftStep)%52))
+                                        {
+                                            action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                            queue.enqueue(action);
+                                        }
+                                        leftStep -= leftStep;
+                                        currPos = (currPos + 4)%52;
+                                    }
                                 }
 
                                 //合体
@@ -949,8 +1601,93 @@ public class GameManager{
                                 //吃掉
                                 else if(chess.eatTest(chessboard[chess.getPos()]))
                                 {
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,3);
-                                    queue.enqueue(action);
+//                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+//                                    queue.enqueue(action);
+//                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+//                                    queue.enqueue(action);
+
+                                    leftStep = 3;
+                                    turnKind = turnTest(currPos,(currPos + leftStep)%52);
+
+                                    //需要左转
+                                    if(turnKind == LEFT)
+                                    {
+                                        currStep = getLeftCorner(currPos,(currPos + leftStep)%52) - currPos;
+                                        //fucking code，又要分解一波，心态是如何炸的
+                                        if(currStep % 2 == 0)
+                                        {
+                                            action = new Action(playerid,chessindex,Action.QUICK_MOVE,currStep);
+                                            queue.enqueue(action);
+                                        }
+                                        else
+                                        {
+                                            if(currStep - 1 != 0)
+                                            {
+                                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,currStep - 1);
+                                                queue.enqueue(action);
+                                            }
+                                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                            queue.enqueue(action);
+                                        }
+
+                                        action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                        queue.enqueue(action);
+
+                                        leftStep -= (currStep - 1 );
+                                        currPos = (currPos + currStep - 1)%52;
+
+                                        currStep = leftStep;
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,leftStep);
+                                        queue.enqueue(action);
+                                        leftStep -= leftStep;
+                                        currPos = (currPos + currStep)%52;
+                                    }
+                                    else if(turnKind == RIGHT)
+                                    {
+                                        currStep = getRightCorner(currPos,(currPos + leftStep)%52) - currPos;
+                                        if(currStep < 0) currStep += 52;
+                                        if(currStep %2 == 0)
+                                        {
+                                            action = new Action(playerid,chessindex,Action.QUICK_MOVE,currStep);
+                                            queue.enqueue(action);
+                                        }
+                                        else
+                                        {
+                                            if(currStep - 1 != 0)
+                                            {
+                                                action = new Action(playerid,chessindex,Action.QUICK_MOVE,currStep - 1);
+                                                queue.enqueue(action);
+                                            }
+                                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                            queue.enqueue(action);
+                                        }
+
+                                        currPos = (currPos + currStep) %52;
+                                        leftStep -= currStep;
+
+                                        action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                        queue.enqueue(action);
+                                        currStep = leftStep;
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                        queue.enqueue(action);
+                                        leftStep -= leftStep;
+                                        currPos = (currPos + currStep)%52;
+                                    }
+                                    else
+                                    {
+                                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
+                                        queue.enqueue(action);
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                        queue.enqueue(action);
+                                        currPos = (currPos + 3)%52;
+                                        leftStep -= 3;
+                                        if(isRightCorner(currPos))
+                                        {
+                                            action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                            queue.enqueue(action);
+                                        }
+                                    }
+
                                     for(Pair pair:chessboard[chess.getPos()].getIndexlist())
                                     {
                                         //坠落，回到停机坪
@@ -958,8 +1695,60 @@ public class GameManager{
                                         action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                                         queue.enqueue(action);
                                     }
-                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
-                                    queue.enqueue(action);
+//                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+//                                    queue.enqueue(action);
+
+                                    leftStep = 1;
+                                    turnKind = turnTest(currPos,(currPos + leftStep)%52) - currPos;
+                                    if(turnKind == LEFT)
+                                    {
+                                        currStep = getLeftCorner(currPos,(currPos + leftStep)%52) - currPos;
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                        if(currStep != 0) queue.enqueue(action);
+
+                                        leftStep -= (currStep -1);
+                                        currPos = (currPos + currStep -1)%52;
+                                        action = new Action(playerid,chessindex,Action.TURNLEFT);
+                                        queue.enqueue(action);
+
+                                        currStep = leftStep;
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                        if(currStep != 0) queue.enqueue(action);
+
+                                        currPos = (currPos + currStep)%52;
+                                        leftStep -= currStep;
+                                    }
+                                    else if(turnKind == RIGHT)
+                                    {
+                                        currStep = getRightCorner(currPos,(currPos + leftStep)%52) - currPos;
+                                        if(currStep < 0) currStep += 52;
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                        if(currStep != 0) queue.enqueue(action);
+
+                                        currPos = (currPos + currStep)%52;
+                                        leftStep -= currStep;
+
+                                        currStep = leftStep;
+                                        action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                        queue.enqueue(action);
+
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,currStep);
+                                        if(currStep != 0) queue.enqueue(action);
+
+                                        currPos = (currPos + currStep)%52;
+                                        leftStep -= currStep;
+                                    }
+                                    else
+                                    {
+                                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
+                                        queue.enqueue(action);
+                                        currPos = (currPos + 1)%52;
+                                        if(isRightCorner(currPos))
+                                        {
+                                            action = new Action(playerid,chessindex,Action.TURNRIGHT);
+                                            queue.enqueue(action);
+                                        }
+                                    }
                                 }
                             }
 
@@ -1064,6 +1853,8 @@ public class GameManager{
         }
 
         System.out.println("/****************************************************************/");
+
+
 
         while(!gameManager_two.isGameOver())
         {
