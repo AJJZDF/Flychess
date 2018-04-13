@@ -1,11 +1,9 @@
 package server;
 
 import protocol.Protocol;
+import protocol.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -120,18 +118,123 @@ public class ServerManagerModel {
                 //BufferedReader sin=new BufferedReader(new InputStreamReader(System.in));
 
                 Protocol msg=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
-                msg.set_msgFromServer(Protocol.GameMsgFromServer.ChessToChoose);
+                msg.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.NOW_YOUR_COLOR_HAVE_BEEN_INIT),5);
+
+
 
                 clientTmp.send2Client(msg);
                 //clientTmp.send2Client("Hello,tcp client\n");
 
                 clientTmp.send2Client(msg);
 
+                sendTest(clientTmp);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    void sendTest(MyClient tmp){
+
+        Vector<Protocol> testExamples=new Vector<>();
+        Protocol tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
+        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.NOW_YOUR_COLOR_HAVE_BEEN_INIT),2);
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
+        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.WHOSE_TURN),3);
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
+        Vector<Integer> selectableChess=new Vector<>();
+        selectableChess.add(new Integer(0));
+        selectableChess.add(new Integer(1));
+        selectableChess.add(new Integer(3));
+        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.CHESS_TO_CHOOSE),selectableChess);
+        testExamples.add(tmp1);
+
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
+        Vector<String > logicSeri=new Vector<>();
+        logicSeri.add("不哄我");
+        logicSeri.add("是吗");
+        logicSeri.add("那就不红吧");
+        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.LOGIC_SERIAL),logicSeri);
+        testExamples.add(tmp1);
+
+        //---------------
+        tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_CLIENT);
+        tmp1.set_game_msgFromClient(new GameMsgFromClient(GameMsgFromClient.DICE_NUM),6);
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_CLIENT);
+        tmp1.set_game_msgFromClient(new GameMsgFromClient(GameMsgFromClient.THE_CHESS_WHO_CHOOSE),2);
+        testExamples.add(tmp1);
+
+
+        //--------------------
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_MSG);
+        tmp1.set_msgLogic(new MsgLogic(MsgLogic.C2S_CLIENT_TRY_JOIN_ROOM),"roommmmmmmid");
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_MSG);
+        tmp1.set_msgLogic(new MsgLogic(MsgLogic.C2S_INROOM_TRY_GAME_START));
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_MSG);
+        tmp1.set_msgLogic(new MsgLogic(MsgLogic.C2S_INROOM_QUIT_ROOM),"quit usr is me");
+        testExamples.add(tmp1);
+
+        //-----------------
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_UNITY_UPDATE_UI);
+        //set room list
+        Vector<String > roomlist=new Vector<>();
+        roomlist.add("room:不哄我");
+        roomlist.add("room:是吗");
+        roomlist.add("room:那就不红吧");
+        tmp1.set_msgUnity(new MsgUnity(MsgUnity.S2C_ROOM_LIST),roomlist);
+        testExamples.add(tmp1);
+
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_UNITY_UPDATE_UI);
+        tmp1.set_msgUnity(new MsgUnity(MsgUnity.S2C_JOIN_ROOM_SUCCESS));
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_UNITY_UPDATE_UI);
+        tmp1.set_msgUnity(new MsgUnity(MsgUnity.S2C_JOIN_ROOM_FAIL));
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_UNITY_UPDATE_UI);
+        //set room person
+        Vector<String > roomPerson=new Vector<>();
+        roomPerson.add("Cmhowl");
+        roomPerson.add("AJJDF");
+        roomPerson.add("CJJ");
+        tmp1.set_msgUnity(new MsgUnity(MsgUnity.S2C_INROOM_ROOM_PERSONS),roomPerson);
+        testExamples.add(tmp1);
+
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_UNITY_UPDATE_UI);
+        tmp1.set_msgUnity(new MsgUnity(MsgUnity.S2C_INROOM_GAME_START));
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_UNITY_UPDATE_UI);
+        tmp1.set_msgUnity(new MsgUnity(MsgUnity.S2C_INROOM_SB_QUIT_ROOM),"cmhowl");
+        testExamples.add(tmp1);
+
+        tmp1=new Protocol(Protocol.MSG_TYPE_LOGI_UNITY_UPDATE_UI);
+        tmp1.set_msgUnity(new MsgUnity(MsgUnity.S2C_INROOM_GAME_FINISH));
+        testExamples.add(tmp1);
+
+
+
+        //----------start to send
+        for (int i = 0; i <testExamples.size() ; i++) {
+            tmp.send2Client(testExamples.elementAt(i));
+        }
+    }
+
     public static void main(String[] args) {
         ServerManagerModel serverManagerTest=new ServerManagerModel();
         serverManagerTest.run();
