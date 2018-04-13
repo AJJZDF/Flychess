@@ -31,12 +31,12 @@ public class Protocol implements Serializable {
     public void set_game_msgFromServer(GameMsgFromServer mfs,int msgPass){
         _game_msgFromServer =mfs;
 
-        if(_game_msgFromServer.ordinal()==GameMsgFromServer.NOW_YOUR_COLOR_HAVE_BEEN_INIT)//自身被初始化的颜色
+        if(_game_msgFromServer.getType()==GameMsgFromServer.NOW_YOUR_COLOR_HAVE_BEEN_INIT)//自身被初始化的颜色
         {
             _game_msgFromServer.setMyColor(msgPass);
             return ;
         }
-        if(_game_msgFromServer.ordinal()==GameMsgFromServer.WHOSE_TURN)//谁的回合
+        if(_game_msgFromServer.getType()==GameMsgFromServer.WHOSE_TURN)//谁的回合
         {
             _game_msgFromServer.setTurnColor(msgPass);
             return ;
@@ -45,12 +45,12 @@ public class Protocol implements Serializable {
     public void set_game_msgFromServer(GameMsgFromServer mfs,Vector msgPass){
         _game_msgFromServer =mfs;
 
-        if(_game_msgFromServer.ordinal()==GameMsgFromServer.CHESS_TO_CHOOSE)////可选棋子
+        if(_game_msgFromServer.getType()==GameMsgFromServer.CHESS_TO_CHOOSE)////可选棋子
         {
             _game_msgFromServer.setSelectableChesses(msgPass);
             return ;
         }
-        if(_game_msgFromServer.ordinal()==GameMsgFromServer.LOGIC_SERIAL)//逻辑序列
+        if(_game_msgFromServer.getType()==GameMsgFromServer.LOGIC_SERIAL)//逻辑序列
         {
             _game_msgFromServer.setLogicSequence(msgPass);
             return ;
@@ -59,12 +59,12 @@ public class Protocol implements Serializable {
 
     public void set_game_msgFromClient(GameMsgFromClient mfc,int msgPass){//msgPass 仅用于传值
         _game_msgFromClient=mfc;
-        if(_game_msgFromClient.ordinal()==GameMsgFromClient.DICE_NUM)//筛子数值
+        if(_game_msgFromClient.getType()==GameMsgFromClient.DICE_NUM)//筛子数值
         {
             _game_msgFromClient.setDice(msgPass);
             return ;
         }
-        if(_game_msgFromClient.ordinal()==GameMsgFromClient.THE_CHESS_WHO_CHOOSE)//选的棋子
+        if(_game_msgFromClient.getType()==GameMsgFromClient.THE_CHESS_WHO_CHOOSE)//选的棋子
         {
             _game_msgFromClient.setChosenChess(msgPass);
             return ;
@@ -76,19 +76,19 @@ public class Protocol implements Serializable {
 
     public void set_msgLogic(MsgLogic ml){//无操作数
         _msgLogic=ml;
-        if(_msgLogic.ordinal()==MsgLogic.C2S_INROOM_TRY_GAME_START){
+        if(_msgLogic.getType()==MsgLogic.C2S_INROOM_TRY_GAME_START){
             //房主发送，申请开始游戏指令         (无操作数)
             return;
         }
     }
     public void set_msgLogic(MsgLogic ml,String msgPass){//msgpass用于传值
         _msgLogic=ml;
-        if(_msgLogic.ordinal()==MsgLogic.C2S_INROOM_QUIT_ROOM){
+        if(_msgLogic.getType()==MsgLogic.C2S_INROOM_QUIT_ROOM){
             //发送退出房间指令                    ( usr)
             _msgLogic.setUsr(msgPass);
             return;
         }
-        if(_msgLogic.ordinal()==MsgLogic.C2S_CLIENT_TRY_JOIN_ROOM){
+        if(_msgLogic.getType()==MsgLogic.C2S_CLIENT_TRY_JOIN_ROOM){
             //client发送试图进入哪个房间          (tryRoomNum)
             _msgLogic.setTryRoomNum(msgPass);
             return;
@@ -98,10 +98,10 @@ public class Protocol implements Serializable {
 
     public void set_msgUnity(MsgUnity mu){//无操作数
         _msgUnity=mu;
-        if(_msgUnity.ordinal()==MsgUnity.S2C_JOIN_ROOM_SUCCESS||
-                _msgUnity.ordinal()==MsgUnity.S2C_JOIN_ROOM_FAIL||
-                _msgUnity.ordinal()==MsgUnity.S2C_INROOM_GAME_START||
-                _msgUnity.ordinal()==MsgUnity.S2C_INROOM_GAME_FINISH){
+        if(_msgUnity.getType()==MsgUnity.S2C_JOIN_ROOM_SUCCESS||
+                _msgUnity.getType()==MsgUnity.S2C_JOIN_ROOM_FAIL||
+                _msgUnity.getType()==MsgUnity.S2C_INROOM_GAME_START||
+                _msgUnity.getType()==MsgUnity.S2C_INROOM_GAME_FINISH){
             //无操作数直接忽视msgPass
             //server返回加入是否成功信息（是 和 否 两条枚举信息）（刷ui）       （无操作数）
             //server 在房间内 播报开始游戏指令（刷新ui）                             （无操作数）
@@ -111,7 +111,7 @@ public class Protocol implements Serializable {
     }
     public void set_msgUnity(MsgUnity mu,String msgPass){//msgPass 仅用于传值
         _msgUnity=mu;
-        if(_msgUnity.ordinal()==MsgUnity.S2C_INROOM_SB_QUIT_ROOM)//server 在房间内 播报某某某退出房间指令（刷新ui）             （personQuit）
+        if(_msgUnity.getType()==MsgUnity.S2C_INROOM_SB_QUIT_ROOM)//server 在房间内 播报某某某退出房间指令（刷新ui）             （personQuit）
         {
             _msgUnity.setPersonQuit(msgPass);
             return ;
@@ -119,12 +119,12 @@ public class Protocol implements Serializable {
     }
     public void set_msgUnity(MsgUnity mu,Vector<String> msgVectorPass){//msgVectorPass 仅用于传值
         _msgUnity=mu;
-        if(_msgUnity.ordinal()==MsgUnity.S2C_ROOM_LIST)//server向client发送当前已有房间号  当前房间列表（刷新ui）          (roomList)
+        if(_msgUnity.getType()==MsgUnity.S2C_ROOM_LIST)//server向client发送当前已有房间号  当前房间列表（刷新ui）          (roomList)
         {
             _msgUnity.setRoomList(msgVectorPass);
             return ;
         }
-        if(_msgUnity.ordinal()==MsgUnity.S2C_INROOM_ROOM_PERSONS)//client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）  （roomPersons）
+        if(_msgUnity.getType()==MsgUnity.S2C_INROOM_ROOM_PERSONS)//client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）  （roomPersons）
         {
             _msgUnity.setRoomPersons(msgVectorPass);
             return ;

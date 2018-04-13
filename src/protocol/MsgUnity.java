@@ -19,30 +19,22 @@ server播报游戏结束（退出游戏ui）                          S2C_INROOM
 
 public class MsgUnity implements Serializable{//用于unity 更新ui
 
-    //server向client发送当前已有房间号  当前房间列表（刷新ui）          (roomList)
-    public static final int S2C_ROOM_LIST=0;
 
-    //server返回加入是否成功信息（是 和 否 两条枚举信息）（刷ui）       （无操作数）
-    public static final int S2C_JOIN_ROOM_SUCCESS=1;
+    public static final int S2C_ROOM_LIST=0;                //server向client发送当前已有房间号  当前房间列表（刷新ui）          (roomList)
+
+    public static final int S2C_JOIN_ROOM_SUCCESS=1;        //server返回加入是否成功信息（是 和 否 两条枚举信息）（刷ui）       （无操作数）
     public static final int S2C_JOIN_ROOM_FAIL=2;
 
-    //client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）  （roomPersons）
-    public static final int S2C_INROOM_ROOM_PERSONS=3;
+    public static final int S2C_INROOM_ROOM_PERSONS=3;      //client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）  （roomPersons）
 
-    //server 在房间内 播报开始游戏指令（刷新ui）                             （无操作数）
-    public static final int S2C_INROOM_GAME_START=4;
+    public static final int S2C_INROOM_GAME_START=4;        //server 在房间内 播报开始游戏指令（刷新ui）                             （无操作数）
 
-    //server 在房间内 播报某某某退出房间指令（刷新ui）                          （personQuit）
-    public static final int S2C_INROOM_SB_QUIT_ROOM=5;
+    public static final int S2C_INROOM_SB_QUIT_ROOM=5;      //server 在房间内 播报某某某退出房间指令（刷新ui）                          （personQuit）
 
-    //server 在房间内 播报游戏结束（退出游戏ui）                                （无操作数）
-    public static final int S2C_INROOM_GAME_FINISH=6;
+    public static final int S2C_INROOM_GAME_FINISH=6;       //server 在房间内 播报游戏结束（退出游戏ui）                                （无操作数）
 
 
     private int type;
-    public MsgUnity(int _type){
-        type=_type;
-    }
     //------------数据
         //server向client发送当前已有房间号  当前房间列表（刷新ui）                  (roomList)
     private Vector<String> roomList=new Vector<String>();
@@ -50,6 +42,10 @@ public class MsgUnity implements Serializable{//用于unity 更新ui
     private Vector<String> roomPersons=new Vector<String>();
     private String personQuit=null;
 
+
+    public MsgUnity(int _type){
+        type=_type;
+    }
     public void setRoomList(Vector<String> roomList) {
         this.roomList = roomList;
     }
@@ -67,7 +63,7 @@ public class MsgUnity implements Serializable{//用于unity 更新ui
     public String toString() {
         if(this.type==MsgUnity.S2C_ROOM_LIST)//server向client发送当前已有房间号  当前房间列表（刷新ui）          (roomList)
             return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                    +"Intent = S2C_ROOM_LIST \n"
+                    +"Intent = S2C_ROOM_LIST    "
                     +"server向client发送当前已有房间号  当前房间列表（刷新ui）\n"
                     +" roomList = "
                     +this.roomList
@@ -83,8 +79,8 @@ public class MsgUnity implements Serializable{//用于unity 更新ui
 
         if(this.type==MsgUnity.S2C_INROOM_SB_QUIT_ROOM)//server 在房间内 播报某某某退出房间指令（刷新ui）             （personQuit）
             return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                    +"Intent = S2C_INROOM_SB_QUIT_ROOM\n"
-                    + "server 在房间内 播报某某某退出房间指令（刷新ui）\n"
+                    +"Intent = S2C_INROOM_SB_QUIT_ROOM    "
+                    + "server 在房间内 播报某某某退出房间指令（刷新ui）    "
                     +" personQuit = "
                     +this.personQuit
                     +" ]";
@@ -119,7 +115,7 @@ public class MsgUnity implements Serializable{//用于unity 更新ui
         return "[error type]"    ;
     }
 
-    public int ordinal(){
+    public int getType(){
         return type;
     }
 
