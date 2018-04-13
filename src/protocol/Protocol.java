@@ -38,21 +38,32 @@ public class Protocol implements Serializable {
         }
         if(_game_msgFromServer.getType()==GameMsgFromServer.WHOSE_TURN)//谁的回合
         {
-            _game_msgFromServer.setTurnColor(msgPass);
+            _game_msgFromServer.setNowTurnColor(msgPass);
+            return ;
+        }
+
+        if(_game_msgFromServer.getType()==GameMsgFromServer.REQUEST_DICE)//请求扔骰子                (playerId(nowTurnColor))
+        {
+            _game_msgFromServer.setNowTurnColor(msgPass);
             return ;
         }
     }
     public void set_game_msgFromServer(GameMsgFromServer mfs,Vector msgPass){
         _game_msgFromServer =mfs;
 
-        if(_game_msgFromServer.getType()==GameMsgFromServer.CHESS_TO_CHOOSE)////可选棋子
-        {
-            _game_msgFromServer.setSelectableChesses(msgPass);
-            return ;
-        }
         if(_game_msgFromServer.getType()==GameMsgFromServer.LOGIC_SERIAL)//逻辑序列
         {
             _game_msgFromServer.setLogicSequence(msgPass);
+            return ;
+        }
+    }
+
+    public void set_game_msgFromServer(GameMsgFromServer mfs,Vector msgPass,int playerId){
+        _game_msgFromServer =mfs;
+
+        if(_game_msgFromServer.getType()==GameMsgFromServer.CHESS_TO_CHOOSE)////可选棋子
+        {
+            _game_msgFromServer.setSelectableChesses(msgPass,playerId);
             return ;
         }
     }
@@ -211,9 +222,12 @@ public class Protocol implements Serializable {
         selectableChess.add(new Integer(0));
         selectableChess.add(new Integer(1));
         selectableChess.add(new Integer(3));
-        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.CHESS_TO_CHOOSE),selectableChess);
+        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.CHESS_TO_CHOOSE),selectableChess,2);
         testExamples.add(tmp1);
 
+        tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
+        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.REQUEST_DICE),3);//msgPass 为 playerId
+        testExamples.add(tmp1);
 
         tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
         Vector<String > logicSeri=new Vector<>();

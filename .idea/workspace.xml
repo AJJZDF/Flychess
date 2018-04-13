@@ -3,12 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8a56aa46-574f-4214-9724-3e350bc12607" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/client/GameClientModel.java" afterPath="$PROJECT_DIR$/src/client/GameClientModel.java" />
-      <change beforePath="$PROJECT_DIR$/src/protocol/GameMsgFromClient.java" afterPath="$PROJECT_DIR$/src/protocol/GameMsgFromClient.java" />
       <change beforePath="$PROJECT_DIR$/src/protocol/GameMsgFromServer.java" afterPath="$PROJECT_DIR$/src/protocol/GameMsgFromServer.java" />
-      <change beforePath="$PROJECT_DIR$/src/protocol/MsgLogic.java" afterPath="$PROJECT_DIR$/src/protocol/MsgLogic.java" />
-      <change beforePath="$PROJECT_DIR$/src/protocol/MsgUnity.java" afterPath="$PROJECT_DIR$/src/protocol/MsgUnity.java" />
       <change beforePath="$PROJECT_DIR$/src/protocol/Protocol.java" afterPath="$PROJECT_DIR$/src/protocol/Protocol.java" />
+      <change beforePath="$PROJECT_DIR$/src/server/ServerManagerModel.java" afterPath="$PROJECT_DIR$/src/server/ServerManagerModel.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,32 +29,17 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Protocol.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/protocol/Protocol.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2598">
-              <caret line="30" column="73" lean-forward="false" selection-start-line="30" selection-start-column="73" selection-end-line="30" selection-end-column="73" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#set_game_msgFromServer#0;class#Protocol#0" expanded="false" />
-                <element signature="method#set_game_msgFromServer#1;class#Protocol#0" expanded="false" />
-                <element signature="method#set_game_msgFromClient#0;class#Protocol#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="GameMsgFromServer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/protocol/GameMsgFromServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1863">
-              <caret line="83" column="30" lean-forward="false" selection-start-line="83" selection-start-column="30" selection-end-line="83" selection-end-column="30" />
+            <state relative-caret-position="324">
+              <caret line="81" column="24" lean-forward="false" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#853#854#0" expanded="true" />
-                <element signature="e#879#880#0" expanded="true" />
-                <element signature="e#3035#3036#0" expanded="true" />
-                <element signature="e#3062#3063#0" expanded="true" />
+                <element signature="e#1010#1011#0" expanded="true" />
+                <element signature="e#1036#1037#0" expanded="true" />
+                <element signature="e#3711#3712#0" expanded="true" />
+                <element signature="e#3738#3739#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -66,12 +48,10 @@
       <file leaf-file-name="MsgUnity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/protocol/MsgUnity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="82" column="56" lean-forward="false" selection-start-line="82" selection-start-column="56" selection-end-line="82" selection-end-column="56" />
+            <state relative-caret-position="188">
+              <caret line="19" column="21" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1816#1824#0" expanded="true" />
-                <element signature="e#1951#1959#0" expanded="true" />
                 <element signature="e#2031#2032#0" expanded="true" />
                 <element signature="e#2057#2058#0" expanded="true" />
                 <element signature="e#2112#2113#0" expanded="true" />
@@ -82,18 +62,6 @@
                 <element signature="e#2356#2357#0" expanded="true" />
                 <element signature="e#5026#5027#0" expanded="true" />
                 <element signature="e#5053#5054#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BugMain.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/protocol/BugMain.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="945">
-              <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -111,11 +79,49 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="BugMain.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/protocol/BugMain.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="108">
+              <caret line="9" column="5" lean-forward="false" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ServerManagerModel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/ServerManagerModel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1305">
+              <caret line="224" column="31" lean-forward="false" selection-start-line="224" selection-start-column="31" selection-end-line="224" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#MyClient#0;class#MyClient#0;class#ServerManagerModel#0" expanded="false" />
+                <element signature="e#1876#1877#0" expanded="true" />
+                <element signature="e#1919#1920#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Protocol.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/protocol/Protocol.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="545">
+              <caret line="301" column="31" lean-forward="true" selection-start-line="210" selection-start-column="7" selection-end-line="301" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#set_game_msgFromClient#0;class#Protocol#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="GameMsgFromClient.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/protocol/GameMsgFromClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="86">
-              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state relative-caret-position="243">
+              <caret line="9" column="48" lean-forward="false" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="48" />
               <folding>
                 <element signature="e#463#464#0" expanded="true" />
                 <element signature="e#489#490#0" expanded="true" />
@@ -130,26 +136,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ServerManagerModel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/server/ServerManagerModel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1295">
-              <caret line="130" column="0" lean-forward="true" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#MyClient#0;class#MyClient#0;class#ServerManagerModel#0" expanded="false" />
-                <element signature="e#1876#1877#0" expanded="true" />
-                <element signature="e#1919#1920#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="MsgLogic.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/protocol/MsgLogic.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1026">
-              <caret line="59" column="22" lean-forward="false" selection-start-line="59" selection-start-column="22" selection-end-line="59" selection-end-column="22" />
+            <state relative-caret-position="162">
+              <caret line="6" column="94" lean-forward="false" selection-start-line="6" selection-start-column="90" selection-end-line="6" selection-end-column="94" />
               <folding>
                 <element signature="e#579#580#0" expanded="true" />
                 <element signature="e#605#606#0" expanded="true" />
@@ -171,11 +162,21 @@
       <file leaf-file-name="GameClientModel.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/client/GameClientModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
-              <caret line="72" column="23" lean-forward="true" selection-start-line="72" selection-start-column="23" selection-end-line="72" selection-end-column="23" />
+            <state relative-caret-position="407">
+              <caret line="63" column="29" lean-forward="false" selection-start-line="63" selection-start-column="29" selection-end-line="63" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Action.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Action.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="189">
+              <caret line="7" column="5" lean-forward="false" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -192,7 +193,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>chessboard</find>
       <find>Chess</find>
       <find>be</find>
       <find>entry</find>
@@ -222,6 +222,7 @@
       <find>merge</find>
       <find>set_game_msgFromServer</find>
       <find>set_game_msgFromClient</find>
+      <find>CHESS_TO_CHOOSE</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -258,16 +259,16 @@
         <option value="$PROJECT_DIR$/src/protocol/Main.java" />
         <option value="$PROJECT_DIR$/src/protocol/testmm.java" />
         <option value="$PROJECT_DIR$/src/protocol/VarTestMutliThread.java" />
-        <option value="$PROJECT_DIR$/src/server/ServerManagerModel.java" />
         <option value="$PROJECT_DIR$/src/protocol/BugMainClient.java" />
         <option value="$PROJECT_DIR$/src/protocol/BugMain.java" />
-        <option value="$PROJECT_DIR$/src/protocol/Protocol.java" />
         <option value="$PROJECT_DIR$/src/protocol/TestEnum.java" />
         <option value="$PROJECT_DIR$/src/client/GameClientModel.java" />
         <option value="$PROJECT_DIR$/src/protocol/GameMsgFromClient.java" />
-        <option value="$PROJECT_DIR$/src/protocol/GameMsgFromServer.java" />
         <option value="$PROJECT_DIR$/src/protocol/MsgLogic.java" />
         <option value="$PROJECT_DIR$/src/protocol/MsgUnity.java" />
+        <option value="$PROJECT_DIR$/src/protocol/Protocol.java" />
+        <option value="$PROJECT_DIR$/src/protocol/GameMsgFromServer.java" />
+        <option value="$PROJECT_DIR$/src/server/ServerManagerModel.java" />
       </list>
     </option>
   </component>
@@ -299,7 +300,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -328,14 +330,26 @@
               <item name="Flychess-2018-4-10" type="b2602c69:ProjectViewProjectNode" />
               <item name="Flychess-2018-4-10" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="protocol" type="462c0819:PsiDirectoryNode" />
+              <item name="BugMain.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
+            </path>
+            <path>
+              <item name="Flychess-2018-4-10" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Flychess-2018-4-10" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Flychess-2018-4-10" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Flychess-2018-4-10" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Chess.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -364,7 +378,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.ServerManagerModel">
+  <component name="RunManager" selected="Application.GameClientModel">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -879,7 +893,8 @@
       <workItem from="1522846021153" duration="724000" />
       <workItem from="1523282643840" duration="2486000" />
       <workItem from="1523359255092" duration="52697000" />
-      <workItem from="1523586000217" duration="12049000" />
+      <workItem from="1523586000217" duration="12855000" />
+      <workItem from="1523617613937" duration="4176000" />
     </task>
     <task id="LOCAL-00001" summary="add protocol">
       <created>1523359297628</created>
@@ -930,11 +945,18 @@
       <option name="project" value="LOCAL" />
       <updated>1523601357591</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="统一了一下协议格式">
+      <created>1523601894102</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1523601894102</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="163430000" />
+    <option name="totallyTimeSpent" value="168412000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -958,7 +980,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.4980695" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32861805" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13219616" sideWeight="0.4935065" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13326226" sideWeight="0.4935065" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984003" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32861805" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -992,14 +1014,15 @@
     <MESSAGE value="更新了房间流程" />
     <MESSAGE value="协议可通过socket传输" />
     <MESSAGE value="add enum类序列化bug模型" />
-    <option name="LAST_COMMIT_MESSAGE" value="add enum类序列化bug模型" />
+    <MESSAGE value="统一了一下协议格式" />
+    <option name="LAST_COMMIT_MESSAGE" value="统一了一下协议格式" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/server/ServerManagerModel.java</url>
-          <line>239</line>
+          <line>236</line>
           <properties />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
@@ -1171,72 +1194,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Grid.java" />
     <entry file="jar://E:/Software/Linux-software/jdk1.8.0_121/src.zip!/java/lang/StringBuilder.java" />
-    <entry file="file://$PROJECT_DIR$/src/WifiClient_GameManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/WifiServer_GameManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://E:/Software/Linux-software/jdk1.8.0_121/src.zip!/java/net/AbstractPlainDatagramSocketImpl.java" />
-    <entry file="file://$PROJECT_DIR$/src/Queue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3537">
-          <caret line="143" column="9" lean-forward="false" selection-start-line="143" selection-start-column="9" selection-end-line="143" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/AutoAI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="2" column="3" lean-forward="false" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/BasicAI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4617">
-          <caret line="177" column="17" lean-forward="false" selection-start-line="177" selection-start-column="17" selection-end-line="177" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Chess.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
           <caret line="20" column="5" lean-forward="false" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25569">
-          <caret line="956" column="37" lean-forward="false" selection-start-line="956" selection-start-column="37" selection-end-line="956" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PlayerAI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1647">
-          <caret line="73" column="1" lean-forward="false" selection-start-line="73" selection-start-column="1" selection-end-line="73" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReceiveUDP.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="65" column="23" lean-forward="false" selection-start-line="65" selection-start-column="19" selection-end-line="65" selection-end-column="23" />
         </state>
       </provider>
     </entry>
@@ -1248,25 +1211,81 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/protocol/MgsLogic" />
+    <entry file="file://$PROJECT_DIR$/src/protocol/EEE.java" />
+    <entry file="file://$PROJECT_DIR$/src/protocol/VarTestMutliThread.java" />
+    <entry file="file://$PROJECT_DIR$/src/protocol/TestEnum.java" />
+    <entry file="file://$PROJECT_DIR$/src/protocol/TestSeria.java" />
+    <entry file="file://$PROJECT_DIR$/src/WifiClient_GameManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="1" column="13" lean-forward="false" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/WifiServer_GameManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/UDP_server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2398">
-          <caret line="67" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+        <state relative-caret-position="27">
+          <caret line="67" column="0" lean-forward="false" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="false" />
             <element signature="class#recMsg#0;class#UDP_server#0" expanded="false" />
-            <element signature="e#4058#4059#0" expanded="false" />
-            <element signature="e#4096#4097#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/protocol/MgsLogic" />
-    <entry file="file://$PROJECT_DIR$/src/protocol/EEE.java" />
-    <entry file="file://$PROJECT_DIR$/src/protocol/VarTestMutliThread.java">
+    <entry file="file://$PROJECT_DIR$/src/ReceiveUDP.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="65" column="23" lean-forward="false" selection-start-line="65" selection-start-column="19" selection-end-line="65" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Queue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="536">
+          <caret line="143" column="9" lean-forward="false" selection-start-line="143" selection-start-column="9" selection-end-line="143" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PlayerAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="536">
+          <caret line="73" column="1" lean-forward="false" selection-start-line="73" selection-start-column="1" selection-end-line="73" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="536">
+          <caret line="956" column="37" lean-forward="false" selection-start-line="956" selection-start-column="37" selection-end-line="956" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/BasicAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="536">
+          <caret line="177" column="17" lean-forward="false" selection-start-line="177" selection-start-column="17" selection-end-line="177" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AutoAI.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
-          <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
+          <caret line="2" column="3" lean-forward="false" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="3" />
           <folding />
         </state>
       </provider>
@@ -1281,40 +1300,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/protocol/BugMain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="945">
-          <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/protocol/TestEnum.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="6" column="21" lean-forward="false" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
+        <state relative-caret-position="108">
+          <caret line="9" column="5" lean-forward="false" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/protocol/TestSeria.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="8" column="5" lean-forward="false" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/protocol/Protocol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2598">
-          <caret line="30" column="73" lean-forward="false" selection-start-line="30" selection-start-column="73" selection-end-line="30" selection-end-column="73" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#set_game_msgFromServer#0;class#Protocol#0" expanded="false" />
-            <element signature="method#set_game_msgFromServer#1;class#Protocol#0" expanded="false" />
-            <element signature="method#set_game_msgFromClient#0;class#Protocol#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1328,41 +1316,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/protocol/GameMsgFromServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1863">
-          <caret line="83" column="30" lean-forward="false" selection-start-line="83" selection-start-column="30" selection-end-line="83" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#853#854#0" expanded="true" />
-            <element signature="e#879#880#0" expanded="true" />
-            <element signature="e#3035#3036#0" expanded="true" />
-            <element signature="e#3062#3063#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/protocol/GameMsgFromClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="86">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding>
-            <element signature="e#463#464#0" expanded="true" />
-            <element signature="e#489#490#0" expanded="true" />
-            <element signature="e#526#527#0" expanded="true" />
-            <element signature="e#558#559#0" expanded="true" />
-            <element signature="e#609#610#0" expanded="true" />
-            <element signature="e#655#656#0" expanded="true" />
-            <element signature="e#1343#1344#0" expanded="true" />
-            <element signature="e#1370#1371#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/protocol/MsgLogic.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1026">
-          <caret line="59" column="22" lean-forward="false" selection-start-line="59" selection-start-column="22" selection-end-line="59" selection-end-column="22" />
+        <state relative-caret-position="162">
+          <caret line="6" column="94" lean-forward="false" selection-start-line="6" selection-start-column="90" selection-end-line="6" selection-end-column="94" />
           <folding>
             <element signature="e#579#580#0" expanded="true" />
             <element signature="e#605#606#0" expanded="true" />
@@ -1382,12 +1339,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/protocol/MsgUnity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="82" column="56" lean-forward="false" selection-start-line="82" selection-start-column="56" selection-end-line="82" selection-end-column="56" />
+        <state relative-caret-position="188">
+          <caret line="19" column="21" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1816#1824#0" expanded="true" />
-            <element signature="e#1951#1959#0" expanded="true" />
             <element signature="e#2031#2032#0" expanded="true" />
             <element signature="e#2057#2058#0" expanded="true" />
             <element signature="e#2112#2113#0" expanded="true" />
@@ -1402,10 +1357,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/protocol/GameMsgFromClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="9" column="48" lean-forward="false" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="48" />
+          <folding>
+            <element signature="e#463#464#0" expanded="true" />
+            <element signature="e#489#490#0" expanded="true" />
+            <element signature="e#526#527#0" expanded="true" />
+            <element signature="e#558#559#0" expanded="true" />
+            <element signature="e#609#610#0" expanded="true" />
+            <element signature="e#655#656#0" expanded="true" />
+            <element signature="e#1343#1344#0" expanded="true" />
+            <element signature="e#1370#1371#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/protocol/GameMsgFromServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="81" column="24" lean-forward="false" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1010#1011#0" expanded="true" />
+            <element signature="e#1036#1037#0" expanded="true" />
+            <element signature="e#3711#3712#0" expanded="true" />
+            <element signature="e#3738#3739#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/protocol/Protocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="545">
+          <caret line="301" column="31" lean-forward="true" selection-start-line="210" selection-start-column="7" selection-end-line="301" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#set_game_msgFromClient#0;class#Protocol#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/server/ServerManagerModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1295">
-          <caret line="130" column="0" lean-forward="true" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
+        <state relative-caret-position="1305">
+          <caret line="224" column="31" lean-forward="false" selection-start-line="224" selection-start-column="31" selection-end-line="224" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#MyClient#0;class#MyClient#0;class#ServerManagerModel#0" expanded="false" />
@@ -1417,8 +1414,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/client/GameClientModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="72" column="23" lean-forward="true" selection-start-line="72" selection-start-column="23" selection-end-line="72" selection-end-column="23" />
+        <state relative-caret-position="407">
+          <caret line="63" column="29" lean-forward="false" selection-start-line="63" selection-start-column="29" selection-end-line="63" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

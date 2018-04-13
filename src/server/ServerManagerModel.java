@@ -74,7 +74,6 @@ public class ServerManagerModel {
 
 
         public void send2Client(String msg){
-            //后期改造成protocol对象序列化传送
             os.print(msg);
             os.flush();
         }
@@ -117,15 +116,10 @@ public class ServerManagerModel {
 
                 //BufferedReader sin=new BufferedReader(new InputStreamReader(System.in));
 
-                Protocol msg=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
-                msg.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.NOW_YOUR_COLOR_HAVE_BEEN_INIT),5);
+                Protocol testMsg=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
+                testMsg.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.NOW_YOUR_COLOR_HAVE_BEEN_INIT),5);
+                clientTmp.send2Client(testMsg);
 
-
-
-                clientTmp.send2Client(msg);
-                //clientTmp.send2Client("Hello,tcp client\n");
-
-                clientTmp.send2Client(msg);
 
                 sendTest(clientTmp);
 
@@ -151,9 +145,12 @@ public class ServerManagerModel {
         selectableChess.add(new Integer(0));
         selectableChess.add(new Integer(1));
         selectableChess.add(new Integer(3));
-        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.CHESS_TO_CHOOSE),selectableChess);
+        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.CHESS_TO_CHOOSE),selectableChess,2);
         testExamples.add(tmp1);
 
+        tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
+        tmp1.set_game_msgFromServer(new GameMsgFromServer(GameMsgFromServer.REQUEST_DICE),3);//msgPass 为 playerId
+        testExamples.add(tmp1);
 
         tmp1=new Protocol(Protocol.MSG_TYPE_GAME_MSG_FROM_SERVER);
         Vector<String > logicSeri=new Vector<>();
