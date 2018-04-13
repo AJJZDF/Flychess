@@ -8,15 +8,17 @@ import java.util.Vector;
 //             逻辑序列
 public class GameMsgFromServer implements Serializable {
     public final static int NOW_YOUR_COLOR_HAVE_BEEN_INIT=0;           //自身被初始化的颜色       (myColor)
-    public final static int WHOSE_TURN=1;                              //谁的回合                 (turnColor)
-    public final static int CHESS_TO_CHOOSE=2;                         //可选棋子                  (selectableChesses)
+    public final static int WHOSE_TURN=1;                              //谁的回合                 (nowTurnColor)
+    public final static int CHESS_TO_CHOOSE=2;                         //可选棋子                  (selectableChesses，playerId(nowTurnColor))轮到自己选棋子
     public final static int LOGIC_SERIAL=3;                            //逻辑序列                   (LogicSequence)
+
+    public final static int REQUEST_DICE=4;                             //请求扔骰子                (playerId(nowTurnColor))
 
     private int type;
 
     //-------数据
     private int myColor;
-    private int turnColor;
+    private int nowTurnColor;
     private Vector<Integer> selectableChesses;
     private Vector<String > LogicSequence;
 
@@ -25,12 +27,13 @@ public class GameMsgFromServer implements Serializable {
     }
     public void setMyColor(int i){this.myColor=i;}
 
-    public void setTurnColor(int turnColor) {
-        this.turnColor = turnColor;
+    public void setNowTurnColor(int nowTurnColor) {
+        this.nowTurnColor = nowTurnColor;
     }
 
-    public void setSelectableChesses(Vector<Integer> selectableChesses) {
+    public void setSelectableChesses(Vector<Integer> selectableChesses,int playerId) {
         this.selectableChesses = selectableChesses;
+        this.nowTurnColor=playerId;
     }
 
     public void setLogicSequence(Vector<String> logicSequence) {
@@ -42,8 +45,8 @@ public class GameMsgFromServer implements Serializable {
         return myColor;
     }
 
-    public int getTurnColor() {
-        return turnColor;
+    public int getNowTurnColor() {
+        return nowTurnColor;
     }
 
     public Vector<Integer> getSelectableChesses() {
@@ -64,17 +67,19 @@ public class GameMsgFromServer implements Serializable {
                     +" myColor = "
                     +myColor
                     +" ]" ;
-        if(this.type==GameMsgFromServer.WHOSE_TURN)//谁的回合                 (turnColor)
+        if(this.type==GameMsgFromServer.WHOSE_TURN)//谁的回合                 (nowTurnColor)
             return "[ MsgType = GAME_MSG_FROM_SERVER    "
                     +"Intent = WHOSE_TURN    "
                     +"谁的回合    "
-                    +" turnColor = "
-                    +turnColor
+                    +" nowTurnColor = "
+                    + nowTurnColor
                     +" ]" ;
         if(this.type==GameMsgFromServer.CHESS_TO_CHOOSE)//可选棋子                  (selectableChesses)
             return "[ MsgType = GAME_MSG_FROM_SERVER    "
                     +"Intent = CHESS_TO_CHOOSE    "
-                    +"可选棋子    "
+                    +"playerId(nowTurnColor) = "
+                    +nowTurnColor
+                    +"  可选棋子    "
                     +" selectableChesses = "
                     +selectableChesses
                     +" ]" ;
@@ -86,6 +91,14 @@ public class GameMsgFromServer implements Serializable {
                     +LogicSequence
                     +" ]" ;
 
+
+        if(this.type==GameMsgFromServer.REQUEST_DICE)//请求扔骰子                   (playerId(nowTurnColor))
+            return "[ MsgType = GAME_MSG_FROM_SERVER    "
+                    +"Intent = REQUEST_DICE    "
+                    +"请求扔骰子    "
+                    +" playerId(nowTurnColor) = "
+                    +nowTurnColor
+                    +" ]" ;
         return "[error type]";
     }
 
