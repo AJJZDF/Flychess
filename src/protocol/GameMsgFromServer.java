@@ -41,21 +41,6 @@ public class GameMsgFromServer implements Serializable {
     }
 
 
-    public int getMyColor() {
-        return myColor;
-    }
-
-    public int getNowTurnColor() {
-        return nowTurnColor;
-    }
-
-    public Vector<Integer> getSelectableChesses() {
-        return selectableChesses;
-    }
-
-    public Vector<String> getLogicSequence() {
-        return LogicSequence;
-    }
 
 
     public String  toString(){
@@ -104,5 +89,21 @@ public class GameMsgFromServer implements Serializable {
 
     public int getType(){
         return type;
+    }
+
+    public int getMyColor() {
+        return myColor;
+    }
+
+    public int getNowTurnColor() {
+        return nowTurnColor;
+    }
+
+    public Vector<Integer> getSelectableChesses() {
+        return selectableChesses;
+    }
+
+    public Vector<String> getLogicSequence() {
+        return LogicSequence;
     }
 }

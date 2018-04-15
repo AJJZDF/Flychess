@@ -50,4 +50,13 @@ public class GameMsgFromClient implements Serializable {
     public int getType(){
         return type;
     }
+
+    public int getChosenChess() {
+        return chosenChess;
+    }
+
+    public int getDice() {
+        return dice;
+    }
+
 }
