@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8a56aa46-574f-4214-9724-3e350bc12607" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/server/Room.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/out/production/FlyChess/Action.class" afterPath="$PROJECT_DIR$/out/production/FlyChess/Action.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/FlyChess/GameManager.class" afterPath="$PROJECT_DIR$/out/production/FlyChess/GameManager.class" />
-      <change beforePath="$PROJECT_DIR$/src/client/GameClientModel.java" afterPath="$PROJECT_DIR$/src/client/GameClientModel.java" />
-      <change beforePath="$PROJECT_DIR$/src/protocol/MsgLogic.java" afterPath="$PROJECT_DIR$/src/protocol/MsgLogic.java" />
-      <change beforePath="$PROJECT_DIR$/src/protocol/MsgUnity.java" afterPath="$PROJECT_DIR$/src/protocol/MsgUnity.java" />
+      <change beforePath="$PROJECT_DIR$/src/protocol/Protocol.java" afterPath="$PROJECT_DIR$/src/protocol/Protocol.java" />
       <change beforePath="$PROJECT_DIR$/src/server/ServerManagerModel.java" afterPath="$PROJECT_DIR$/src/server/ServerManagerModel.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -52,8 +47,8 @@
       <file leaf-file-name="MsgUnity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/protocol/MsgUnity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="729">
-              <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
+            <state relative-caret-position="113">
+              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2309#2310#0" expanded="true" />
@@ -71,11 +66,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Room.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Room.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/Room.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="9" column="26" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="26" />
+            <state relative-caret-position="216">
+              <caret line="8" column="26" lean-forward="false" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="26" />
               <folding>
                 <element signature="e#439#440#0" expanded="true" />
                 <element signature="e#480#481#0" expanded="true" />
@@ -88,16 +83,16 @@
       <file leaf-file-name="ServerManagerModel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/ServerManagerModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="333">
-              <caret line="23" column="48" lean-forward="false" selection-start-line="23" selection-start-column="39" selection-end-line="23" selection-end-column="48" />
+            <state relative-caret-position="289">
+              <caret line="23" column="38" lean-forward="true" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#ServerManagerModel#0;class#ServerManagerModel#0" expanded="false" />
                 <element signature="method#init#0;class#ServerManagerModel#0" expanded="false" />
                 <element signature="method#sendTest#0;class#ServerManagerModel#0" expanded="false" />
                 <element signature="method#MyClient#0;class#MyClient#0" expanded="false" />
-                <element signature="e#8070#8071#0" expanded="true" />
-                <element signature="e#8105#8106#0" expanded="true" />
+                <element signature="e#8062#8063#0" expanded="true" />
+                <element signature="e#8097#8098#0" expanded="true" />
                 <element signature="method#toString#0;class#MyClient#0" expanded="false" />
               </folding>
             </state>
@@ -126,13 +121,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Protocol.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Protocol.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/protocol/Protocol.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="505">
-              <caret line="193" column="30" lean-forward="false" selection-start-line="193" selection-start-column="22" selection-end-line="193" selection-end-column="30" />
+            <state relative-caret-position="815">
+              <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#753#754#0" expanded="true" />
+                <element signature="e#784#785#0" expanded="true" />
+                <element signature="e#841#842#0" expanded="true" />
+                <element signature="e#883#884#0" expanded="true" />
+                <element signature="e#940#941#0" expanded="true" />
+                <element signature="e#982#983#0" expanded="true" />
+                <element signature="e#1020#1021#0" expanded="true" />
+                <element signature="e#1052#1053#0" expanded="true" />
+                <element signature="e#1090#1091#0" expanded="true" />
+                <element signature="e#1122#1123#0" expanded="true" />
                 <element signature="method#set_game_msgFromServer#0;class#Protocol#0" expanded="false" />
                 <element signature="method#set_game_msgFromServer#1;class#Protocol#0" expanded="false" />
                 <element signature="method#set_game_msgFromServer#2;class#Protocol#0" expanded="false" />
@@ -143,6 +148,7 @@
                 <element signature="method#set_msgUnity#1;class#Protocol#0" expanded="false" />
                 <element signature="method#set_msgUnity#2;class#Protocol#0" expanded="false" />
                 <element signature="method#server_send2Client#0;class#Protocol#0" expanded="false" />
+                <element signature="method#toString#0;class#Protocol#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -289,14 +295,14 @@
         <option value="$PROJECT_DIR$/src/protocol/BugMain.java" />
         <option value="$PROJECT_DIR$/src/protocol/TestEnum.java" />
         <option value="$PROJECT_DIR$/src/protocol/GameMsgFromClient.java" />
-        <option value="$PROJECT_DIR$/src/protocol/Protocol.java" />
         <option value="$PROJECT_DIR$/src/protocol/GameMsgFromServer.java" />
-        <option value="$PROJECT_DIR$/src/protocol/MsgUnity.java" />
         <option value="$PROJECT_DIR$/src/protocol/Room.java" />
         <option value="$PROJECT_DIR$/src/protocol/MsgLogic.java" />
         <option value="$PROJECT_DIR$/src/server/Room.java" />
         <option value="$PROJECT_DIR$/src/client/GameClientModel.java" />
+        <option value="$PROJECT_DIR$/src/protocol/MsgUnity.java" />
         <option value="$PROJECT_DIR$/src/server/ServerManagerModel.java" />
+        <option value="$PROJECT_DIR$/src/protocol/Protocol.java" />
       </list>
     </option>
   </component>
@@ -932,7 +938,7 @@
       <workItem from="1523617613937" duration="4877000" />
       <workItem from="1523633126325" duration="1239000" />
       <workItem from="1523705870539" duration="9688000" />
-      <workItem from="1523761048215" duration="476000" />
+      <workItem from="1523761048215" duration="1595000" />
     </task>
     <task id="LOCAL-00001" summary="add protocol">
       <created>1523359297628</created>
@@ -997,11 +1003,18 @@
       <option name="project" value="LOCAL" />
       <updated>1523627556422</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="add room">
+      <created>1523761541049</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1523761541050</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="180516000" />
+    <option name="totallyTimeSpent" value="181635000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -1061,7 +1074,8 @@
     <MESSAGE value="add enum类序列化bug模型" />
     <MESSAGE value="统一了一下协议格式" />
     <MESSAGE value="add 请求扔骰子和可选棋子的playId" />
-    <option name="LAST_COMMIT_MESSAGE" value="add 请求扔骰子和可选棋子的playId" />
+    <MESSAGE value="add room" />
+    <option name="LAST_COMMIT_MESSAGE" value="add room" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1359,26 +1373,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/protocol/MsgUnity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="729">
-          <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2309#2310#0" expanded="true" />
-            <element signature="e#2335#2336#0" expanded="true" />
-            <element signature="e#2390#2391#0" expanded="true" />
-            <element signature="e#2430#2431#0" expanded="true" />
-            <element signature="e#2492#2493#0" expanded="true" />
-            <element signature="e#2538#2539#0" expanded="true" />
-            <element signature="e#2590#2591#0" expanded="true" />
-            <element signature="e#2634#2635#0" expanded="true" />
-            <element signature="e#5304#5305#0" expanded="true" />
-            <element signature="e#5331#5332#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/protocol/MsgLogic.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1566">
@@ -1404,26 +1398,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/protocol/Protocol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="193" column="30" lean-forward="false" selection-start-line="193" selection-start-column="22" selection-end-line="193" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#set_game_msgFromServer#0;class#Protocol#0" expanded="false" />
-            <element signature="method#set_game_msgFromServer#1;class#Protocol#0" expanded="false" />
-            <element signature="method#set_game_msgFromServer#2;class#Protocol#0" expanded="false" />
-            <element signature="method#set_game_msgFromClient#0;class#Protocol#0" expanded="false" />
-            <element signature="method#set_msgLogic#0;class#Protocol#0" expanded="false" />
-            <element signature="method#set_msgLogic#1;class#Protocol#0" expanded="false" />
-            <element signature="method#set_msgUnity#0;class#Protocol#0" expanded="false" />
-            <element signature="method#set_msgUnity#1;class#Protocol#0" expanded="false" />
-            <element signature="method#set_msgUnity#2;class#Protocol#0" expanded="false" />
-            <element signature="method#server_send2Client#0;class#Protocol#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/client/GameClientModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="431">
@@ -1435,31 +1409,82 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/ServerManagerModel.java">
+    <entry file="file://$PROJECT_DIR$/src/protocol/MsgUnity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="23" column="48" lean-forward="false" selection-start-line="23" selection-start-column="39" selection-end-line="23" selection-end-column="48" />
+        <state relative-caret-position="113">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#ServerManagerModel#0;class#ServerManagerModel#0" expanded="false" />
-            <element signature="method#init#0;class#ServerManagerModel#0" expanded="false" />
-            <element signature="method#sendTest#0;class#ServerManagerModel#0" expanded="false" />
-            <element signature="method#MyClient#0;class#MyClient#0" expanded="false" />
-            <element signature="e#8070#8071#0" expanded="true" />
-            <element signature="e#8105#8106#0" expanded="true" />
-            <element signature="method#toString#0;class#MyClient#0" expanded="false" />
+            <element signature="e#2309#2310#0" expanded="true" />
+            <element signature="e#2335#2336#0" expanded="true" />
+            <element signature="e#2390#2391#0" expanded="true" />
+            <element signature="e#2430#2431#0" expanded="true" />
+            <element signature="e#2492#2493#0" expanded="true" />
+            <element signature="e#2538#2539#0" expanded="true" />
+            <element signature="e#2590#2591#0" expanded="true" />
+            <element signature="e#2634#2635#0" expanded="true" />
+            <element signature="e#5304#5305#0" expanded="true" />
+            <element signature="e#5331#5332#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/Room.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="9" column="26" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="26" />
+        <state relative-caret-position="216">
+          <caret line="8" column="26" lean-forward="false" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="26" />
           <folding>
             <element signature="e#439#440#0" expanded="true" />
             <element signature="e#480#481#0" expanded="true" />
             <element signature="method#toString#0;class#Room#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/ServerManagerModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="23" column="38" lean-forward="true" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#ServerManagerModel#0;class#ServerManagerModel#0" expanded="false" />
+            <element signature="method#init#0;class#ServerManagerModel#0" expanded="false" />
+            <element signature="method#sendTest#0;class#ServerManagerModel#0" expanded="false" />
+            <element signature="method#MyClient#0;class#MyClient#0" expanded="false" />
+            <element signature="e#8062#8063#0" expanded="true" />
+            <element signature="e#8097#8098#0" expanded="true" />
+            <element signature="method#toString#0;class#MyClient#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/protocol/Protocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="815">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#753#754#0" expanded="true" />
+            <element signature="e#784#785#0" expanded="true" />
+            <element signature="e#841#842#0" expanded="true" />
+            <element signature="e#883#884#0" expanded="true" />
+            <element signature="e#940#941#0" expanded="true" />
+            <element signature="e#982#983#0" expanded="true" />
+            <element signature="e#1020#1021#0" expanded="true" />
+            <element signature="e#1052#1053#0" expanded="true" />
+            <element signature="e#1090#1091#0" expanded="true" />
+            <element signature="e#1122#1123#0" expanded="true" />
+            <element signature="method#set_game_msgFromServer#0;class#Protocol#0" expanded="false" />
+            <element signature="method#set_game_msgFromServer#1;class#Protocol#0" expanded="false" />
+            <element signature="method#set_game_msgFromServer#2;class#Protocol#0" expanded="false" />
+            <element signature="method#set_game_msgFromClient#0;class#Protocol#0" expanded="false" />
+            <element signature="method#set_msgLogic#0;class#Protocol#0" expanded="false" />
+            <element signature="method#set_msgLogic#1;class#Protocol#0" expanded="false" />
+            <element signature="method#set_msgUnity#0;class#Protocol#0" expanded="false" />
+            <element signature="method#set_msgUnity#1;class#Protocol#0" expanded="false" />
+            <element signature="method#set_msgUnity#2;class#Protocol#0" expanded="false" />
+            <element signature="method#server_send2Client#0;class#Protocol#0" expanded="false" />
+            <element signature="method#toString#0;class#Protocol#0" expanded="false" />
           </folding>
         </state>
       </provider>

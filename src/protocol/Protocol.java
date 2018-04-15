@@ -27,8 +27,28 @@ public class Protocol implements Serializable {
         msg_type=type;
     }
 
+    public int getMsg_type() {
+        return msg_type;
+    }
 
-    public void set_game_msgFromServer(GameMsgFromServer mfs,int msgPass){
+    public GameMsgFromServer get_game_msgFromServer() {
+        return _game_msgFromServer;
+    }
+
+    public GameMsgFromClient get_game_msgFromClient() {
+        return _game_msgFromClient;
+    }
+
+    public MsgLogic get_msgLogic() {
+        return _msgLogic;
+    }
+
+    public MsgUnity get_msgUnity() {
+        return _msgUnity;
+    }
+
+
+    public void set_game_msgFromServer(GameMsgFromServer mfs, int msgPass){
         _game_msgFromServer =mfs;
 
         if(_game_msgFromServer.getType()==GameMsgFromServer.NOW_YOUR_COLOR_HAVE_BEEN_INIT)//自身被初始化的颜色
