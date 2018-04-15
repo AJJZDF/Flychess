@@ -1,5 +1,7 @@
 package client;
 
+import protocol.GameMsgFromServer;
+import protocol.MsgLogic;
 import protocol.Protocol;
 
 import java.io.*;
@@ -10,10 +12,23 @@ public class GameClientModel {
 
     class MyServer extends Thread{
         private Socket server=null;
-
         public volatile boolean exitRecvThread =false;
+
         private BufferedReader is ;
         private PrintWriter os ;
+
+        MyServer(String intelAddress,int port){//intelAddress eg."127.0.0.1",port端口号
+            try {
+                //向intelAddress 的ip地址，port端口号发出请求
+                this.server =new Socket(intelAddress,port);
+
+                //初始化输入输出流
+                is = new BufferedReader(new InputStreamReader(server.getInputStream()));
+                os = new PrintWriter(server.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         @Override   //Recv线程(Recv from server)
         public void run() {
@@ -51,27 +66,10 @@ public class GameClientModel {
             exitRecvThread=true;
         }
 
-        MyServer(String intelAddress,int port){//intelAddress eg."127.0.0.1",port端口号
-
-
-            try {
-                //向intelAddress 的ip地址，port端口号发出请求
-                this.server =new Socket(intelAddress,port);
-
-                //初始化输入输出流
-                is = new BufferedReader(new InputStreamReader(server.getInputStream()));
-                os = new PrintWriter(server.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
         public void send2Server(String msg){
             //后期改造成protocol对象序列化传送
             os.print(msg);
             os.flush();
-
         }
 
         public void send2Server(Protocol msg){
@@ -81,9 +79,12 @@ public class GameClientModel {
     }
 
     public static void main(String[] args) {
-
         GameClientModel gameClientModel=new GameClientModel();
         MyServer myServer=gameClientModel.new MyServer("127.0.0.1",8888);
+
+        Protocol createRoom=new Protocol(Protocol.MSG_TYPE_LOGI_MSG);
+        createRoom.set_msgLogic(new MsgLogic(MsgLogic.C2S_SEND_CREATE_ROOM),"试问，你就是我的master吗");
+        myServer.send2Server(createRoom);
 
         myServer.start();
     }

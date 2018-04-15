@@ -7,13 +7,15 @@ public class MsgLogic implements Serializable {
     public static final int C2S_INROOM_TRY_GAME_START=1;         //房主发送，申请开始游戏指令         (无操作数)
     public static final int C2S_INROOM_QUIT_ROOM=2;              //发送退出房间指令                    ( usr)
 
+    public static final int C2S_SEND_CREATE_ROOM=3;             //client 发送房间名string 给server    （tryCreateRoomName）
+
 
     private int type;
     //---------------数据
         //Join room number(uuid)
     private String tryRoomNum=null;
     private String usr=null;
-
+    private String tryCreateRoomName=null;
 
     public MsgLogic(int _type){
         type=_type;
@@ -24,6 +26,14 @@ public class MsgLogic implements Serializable {
 
     public void setUsr(String usr) {
         this.usr = usr;
+    }
+
+    public void setTryCreateRoomName(String tryCreateRoomName) {
+        this.tryCreateRoomName = tryCreateRoomName;
+    }
+
+    public String getTryCreateRoomName() {
+        return tryCreateRoomName;
     }
 
     public String getUsr() {
@@ -54,6 +64,13 @@ public class MsgLogic implements Serializable {
                     +"client Usr 发送退出房间指令    "
                     +"  Quit Room Usr = "
                     +this.usr
+                    +" ]";
+        if(this.type==MsgLogic.C2S_SEND_CREATE_ROOM)//client 发送房间名string 给server    （tryCreateRoomName）
+            return "[ MsgType = LOGI_MSG    "
+                    +"Intent = C2S_SEND_CREATE_ROOM    "
+                    +"client 发送房间名string 给server    "
+                    +"tryCreateRoomName = "
+                    +this.tryCreateRoomName
                     +" ]";
         return "[error type]";
     }

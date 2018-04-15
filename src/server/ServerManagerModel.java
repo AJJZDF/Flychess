@@ -14,11 +14,17 @@ import static java.lang.Thread.sleep;
 
 public class ServerManagerModel {
 
+    private Vector<MyClient> vec_clients;                //存储已经accept的client
+    private Map<Socket,Integer> map_client2Index;        //映射socket到Vector中的index
 
-    private Vector<MyClient> vec_clients;              //存储已经accept的client
-    private Map<Socket,Integer> map_client2Index;   //映射socket到Vector中的index
+    private Map<String ,Room> map_roomName2Room;           //存储roomlist
 
     private ServerSocket serverSocket;                  //绑定端口
+
+    private HashMap<MyClient,Protocol> msgBuffer;//使用类似于假脱机？（nio？）的思想，每个thread收到消息，通过public void synchor putMsg(){]
+                                                    //到信箱msgBuffer，server多开一个线程（deal with msgbuffer）去while true sleep处理信箱内容，处理完就清空
+                                                    //疑问，如果处理的过程中新加入了msg，怎么版（只给这一个变量枷锁lock），【学霸林说同步块？】
+
 
     /*
     1.自动匹配功能：申请了‘匹配’命令的人会被加入一个列表，在该列表中组成四人房间
@@ -27,67 +33,21 @@ public class ServerManagerModel {
                 client收到房间列表之后，一旦点击，则可以发送申请加入的消息。超过三个人的时候返回加入失败的信息，房间已满或者已经开始游戏返回相应信息。
 
      */
+//```````````房间function
+    public boolean checkIfExistRoomNamed(String roomName){
+        if(map_roomName2Room.containsKey(roomName)){
 
-    class MyClient extends Thread{
-        private Socket client;
-
-        public volatile boolean exitRecvThread =false;
-        private BufferedReader is ;
-        private PrintWriter os ;
-
-        MyClient(Socket i){
-            this.client=i;
-
-            try {
-                //初始化输入输出流
-                is = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                os = new PrintWriter(client.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        @Override   //Recv线程  (recv from client)
-        public void run() {
-            while (!exitRecvThread) {
-
-                //recv protocol(msg from server)
-                Protocol recvMsg = Protocol.socketUnSerilize(client);
-                if(recvMsg!=null)
-                    System.out.println(recvMsg);
-
-                else System.out.println("recv null");
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-        //用于退出recv线程
-        public void exitRecvThread(){
-            exitRecvThread=true;
-        }
-
-
-
-        public void send2Client(String msg){
-            os.print(msg);
-            os.flush();
-        }
-
-        public void send2Client(Protocol msg){
-            //protocol对象序列化传送
-            Protocol.socketSerilize(client,msg);
-        }
+            return true;}
+        else return false;
     }
+//```````````房间function
 
 
     ServerManagerModel(){
         vec_clients=new Vector<MyClient>();
         map_client2Index=new HashMap<Socket,Integer>();
+        map_roomName2Room=new HashMap<>();
+
 
         init();
     }
@@ -235,6 +195,73 @@ public class ServerManagerModel {
     public static void main(String[] args) {
         ServerManagerModel serverManagerTest=new ServerManagerModel();
         serverManagerTest.run();
+
+    }
+}
+class MyClient extends Thread{
+    private Socket client;
+
+    public volatile boolean exitRecvThread =false;
+    private BufferedReader is ;
+    private PrintWriter os ;
+
+
+
+    MyClient(Socket i){
+        this.client=i;
+
+        try {
+            //初始化输入输出流
+            is = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            os = new PrintWriter(client.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override   //Recv线程  (recv from client)
+    public void run() {
+        while (!exitRecvThread) {
+
+            //recv protocol(msg from server)
+            Protocol recvMsg = Protocol.socketUnSerilize(client);
+            if(recvMsg!=null)
+                System.out.println(recvMsg);
+
+            else System.out.println("recv null");
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+    //用于退出recv线程
+    public void exitRecvThread(){
+        exitRecvThread=true;
+    }
+
+
+
+    public void send2Client(String msg){
+        os.print(msg);
+        os.flush();
+    }
+
+    public void send2Client(Protocol msg){
+        //protocol对象序列化传送
+        Protocol.socketSerilize(client,msg);
+    }
+
+    @Override
+    public String toString() {
+        return "[ socket client = "
+                +client.toString()
+                +",exitRecvThread = "
+                +exitRecvThread
+                +" ]";
 
     }
 }
