@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8a56aa46-574f-4214-9724-3e350bc12607" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/protocol/Protocol.java" afterPath="$PROJECT_DIR$/src/protocol/Protocol.java" />
-      <change beforePath="$PROJECT_DIR$/src/server/ServerManagerModel.java" afterPath="$PROJECT_DIR$/src/server/ServerManagerModel.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -938,7 +936,7 @@
       <workItem from="1523617613937" duration="4877000" />
       <workItem from="1523633126325" duration="1239000" />
       <workItem from="1523705870539" duration="9688000" />
-      <workItem from="1523761048215" duration="1595000" />
+      <workItem from="1523761048215" duration="1609000" />
     </task>
     <task id="LOCAL-00001" summary="add protocol">
       <created>1523359297628</created>
@@ -1010,11 +1008,18 @@
       <option name="project" value="LOCAL" />
       <updated>1523761541050</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="add getter">
+      <created>1523765506586</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1523765506586</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="181635000" />
+    <option name="totallyTimeSpent" value="181649000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -1075,7 +1080,8 @@
     <MESSAGE value="统一了一下协议格式" />
     <MESSAGE value="add 请求扔骰子和可选棋子的playId" />
     <MESSAGE value="add room" />
-    <option name="LAST_COMMIT_MESSAGE" value="add room" />
+    <MESSAGE value="add getter" />
+    <option name="LAST_COMMIT_MESSAGE" value="add getter" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
