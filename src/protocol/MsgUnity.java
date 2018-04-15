@@ -15,6 +15,15 @@ server返回加入是否成功信息(是 和 否 两条枚举信息)（刷ui） 
 server播报开始游戏指令（刷新ui）                          S2C_INROOM_GAME_START
 
 server播报游戏结束（退出游戏ui）                          S2C_INROOM_GAME_FINISH
+
+
+
+创建房间：
+client 发送房间名string 给server                                      protocol SEND_CREATE_ROOM
+server（map《string roomname，room 》 判断是否有这个房间key）
+如果 没有，就返回创建成功，以及房间信息（room对象）。                   protocol
+如果有，返回创建失败                                                      protocol
+
  */
 
 public class MsgUnity implements Serializable{//用于unity 更新ui
