@@ -22,7 +22,7 @@ public class ServerManagerModel {
     private ServerSocket serverSocket;                  //绑定端口
 
     private HashMap<MyClient,Protocol> msgBuffer;//使用类似于假脱机？（nio？）的思想，每个thread收到消息，通过public void putMsg(){]
-                                                    //到信箱msgBuffer，server多开一个线程（deal with msgbuffer）去while true sleep处理信箱内容，处理完就清空
+    //concurrenthashmap                           //到信箱msgBuffer，server多开一个线程（deal with msgbuffer）去while true sleep处理信箱内容，处理完就清空
                                                     //疑问，如果处理的过程中新加入了msg，怎么版（只给这一个变量枷锁lock），【学霸林说同步块？】
 
 
