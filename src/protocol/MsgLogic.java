@@ -1,5 +1,7 @@
 package protocol;
 
+import NetworkRoom4Unity.NetworkRoomAction;
+
 import java.io.Serializable;
 
 public class MsgLogic implements Serializable {
@@ -9,6 +11,7 @@ public class MsgLogic implements Serializable {
 
     public static final int C2S_SEND_CREATE_ROOM=3;             //client 发送房间名string 给server    （tryCreateRoomName）
 
+    public static final int C2S_REQUSET_ROOMMATE_STATE_CHANGE=4;    //client发送请求改变房间某个人物状态的消息 (requestStateChange)
 
     private int type;
     //---------------数据
@@ -16,6 +19,7 @@ public class MsgLogic implements Serializable {
     private String tryRoomNum=null;
     private String usr=null;
     private String tryCreateRoomName=null;
+    private NetworkRoomAction requestStateChange=null;
 
     public MsgLogic(int _type){
         type=_type;
@@ -30,6 +34,14 @@ public class MsgLogic implements Serializable {
 
     public void setTryCreateRoomName(String tryCreateRoomName) {
         this.tryCreateRoomName = tryCreateRoomName;
+    }
+
+    public void setRequestStateChange(NetworkRoomAction requestStateChange) {
+        this.requestStateChange = requestStateChange;
+    }
+
+    public NetworkRoomAction getRequestStateChange() {
+        return requestStateChange;
     }
 
     public String getTryCreateRoomName() {
@@ -71,6 +83,13 @@ public class MsgLogic implements Serializable {
                     +"client 发送房间名string 给server    "
                     +"tryCreateRoomName = "
                     +this.tryCreateRoomName
+                    +" ]";
+        if(this.type==MsgLogic.C2S_REQUSET_ROOMMATE_STATE_CHANGE) //client发送请求改变房间某个人物状态的消息 (requestStateChange)
+            return "[ MsgType = LOGI_MSG    "
+                    +"Intent = C2S_REQUSET_ROOMMATE_STATE_CHANGE    "
+                    +"client发送请求改变房间某个人物状态的消息    "
+                    +"requestStateChange = "
+                    +this.requestStateChange
                     +" ]";
         return "[error type]";
     }
