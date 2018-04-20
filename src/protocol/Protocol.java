@@ -13,6 +13,7 @@ public class Protocol implements Serializable {
     public static final int MSG_TYPE_LOGI_MSG = 2;
     public static final int MSG_TYPE_LOGI_UNITY_UPDATE_UI =3;
 
+
     private int msg_type;//true represent 现在是server的msg，false代表现在是client的msg
 
 

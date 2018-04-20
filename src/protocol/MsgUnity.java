@@ -42,7 +42,7 @@ public class MsgUnity implements Serializable{//用于unity 更新ui
 
     public static final int S2C_INROOM_GAME_FINISH=6;       //server 在房间内 播报游戏结束（退出游戏ui）                                （无操作数）
 
-
+public static final int S2C_INROOM_ROOMMATE_STATE_CHANGE=7; //server在client请求改变房间状态后，发送改变后的房间状态列表给client    (roommateStateList)
     private int type;
     //------------数据
         //server向client发送当前已有房间号  当前房间列表（刷新ui）                  (roomList)
@@ -51,6 +51,7 @@ public class MsgUnity implements Serializable{//用于unity 更新ui
     private Vector<String> roomPersons=new Vector<String>();
     private String personQuit=null;
 
+    private Vector<String> roommateStateList=new Vector<String>();
 
     public MsgUnity(int _type){
         type=_type;
@@ -67,6 +68,13 @@ public class MsgUnity implements Serializable{//用于unity 更新ui
         this.personQuit = personQuit;
     }
 
+    public void setRoommateStateList(Vector<String> roommateStateList) {
+        this.roommateStateList = roommateStateList;
+    }
+
+    public Vector<String> getRoommateStateList() {
+        return roommateStateList;
+    }
 
     @Override
     public String toString() {
@@ -76,6 +84,14 @@ public class MsgUnity implements Serializable{//用于unity 更新ui
                     +"server向client发送当前已有房间号  当前房间列表（刷新ui）\n"
                     +" roomList = "
                     +this.roomList
+                    +" ]";
+
+        if(this.type==MsgUnity.S2C_INROOM_ROOMMATE_STATE_CHANGE)//server在client请求改变房间状态后，发送改变后的房间状态列表给client    (roommateStateList)
+            return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
+                    +"Intent = S2C_INROOM_ROOMMATE_STATE_CHANGE    "
+                    +"server在client请求改变房间状态后，发送改变后的房间状态列表给client\n"
+                    +" roommateStateList = "
+                    +this.roommateStateList
                     +" ]";
 
         if(this.type==MsgUnity.S2C_INROOM_ROOM_PERSONS)//client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）  （roomPersons）

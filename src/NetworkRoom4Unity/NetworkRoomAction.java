@@ -1,13 +1,15 @@
 package NetworkRoom4Unity;
 
-public class NetworkRoomAction {
+import java.io.Serializable;
+
+public class NetworkRoomAction implements Serializable{
 
 
-    public static int STATE_BAN = 1;//简单地移动到起始点,用到的参数：playerid,chessid,action
-    public static int STATE_AI=2;
-    public static int STATE_CHOOSE=3;
-    public static int STATE_WAITCHOOSE=4;
-    public static int STATE_READY=5;
+    public static final int STATE_BAN = 1;             //ban掉                  (posId  null    null   STATE_BAN)
+    public static final int STATE_AI=2;                //当前为ai               (posId  null    null    STATE_AI)
+    public static final int STATE_CHOOSE=3;            //被选择了               (posId  playerid    playerName   STATE_CHOOSE)
+    public static final int STATE_WAITCHOOSE=4;        //初始状态 等待          (posId  null    null   STATE_WAITCHOOSE)
+    public static final int STATE_READY=5;             //准备号了               (posId  playerid    playerName    STATE_READY)
 
     private int posId;          //对应的位置id,              取值[0,3]
     private int playerId;       //第几个玩家，从0开始数起。     取值[0,3]
