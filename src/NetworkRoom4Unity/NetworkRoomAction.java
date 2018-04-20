@@ -69,4 +69,10 @@ public class NetworkRoomAction implements Serializable{
         str += Integer.toString(this.state);
         return str;
     }
+
+    public static void main(String[] args) {
+        //房间界面按下按钮  client发送protocol.MsgLogic.C2S_REQUSET_ROOMMATE_STATE_CHANGE 并且包含 【欲改变后的特定位置的状态】供服务器【在room逻辑】检查合法性
+        //服务器检查不合法则无反应
+        //服务器检查合法，则发送protocol.MsgUnity.S2C_INROOM_ROOMMATE_STATE_CHANGE 包含roommateStateList 四个人的状态表
+    }
 }
