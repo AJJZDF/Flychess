@@ -26,6 +26,8 @@ server（map《string roomname，room 》 判断是否有这个房间key）
 
  */
 
+
+//维护更新ui的指令，即服务端发给客户端的东西
 public class MsgUnity implements Serializable{//用于unity 更新ui
 
 

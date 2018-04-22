@@ -1,13 +1,12 @@
 package client;
 
-import protocol.GameMsgFromServer;
 import protocol.MsgLogic;
 import protocol.Protocol;
 
 import java.io.*;
 import java.net.Socket;
 
-public class GameClientModel {
+public class GameClientModel_LongSocket {
 
 
     class MyServer extends Thread{
@@ -79,7 +78,7 @@ public class GameClientModel {
     }
 
     public static void main(String[] args) {
-        GameClientModel gameClientModel=new GameClientModel();
+        GameClientModel_LongSocket gameClientModel=new GameClientModel_LongSocket();
         MyServer myServer=gameClientModel.new MyServer("127.0.0.1",8888);
 
         Protocol createRoom=new Protocol(Protocol.MSG_TYPE_LOGI_MSG);

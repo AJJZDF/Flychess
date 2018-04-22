@@ -1,3 +1,5 @@
+package FlyChess;
+
 /**
  * Created by gitfan on 3/29/18.
  */

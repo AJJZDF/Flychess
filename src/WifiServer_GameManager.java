@@ -1,4 +1,4 @@
-
+import FlyChess.*;
 
 public class WifiServer_GameManager extends Thread{
 
@@ -13,7 +13,7 @@ public class WifiServer_GameManager extends Thread{
 
     private int players_cnt = -1;
 
-    public WifiServer_GameManager(BasicAI red,BasicAI yellow,BasicAI blue,BasicAI green)
+    public WifiServer_GameManager(BasicAI red, BasicAI yellow, BasicAI blue, BasicAI green)
     {
         player = new BasicAI[4];
         player[0] = red;
@@ -113,7 +113,7 @@ public class WifiServer_GameManager extends Thread{
     //提供给扔骰子的按钮，按按钮时调用这个函数
     public void setDice(int dice){
         if(dice <= 0 || dice > 6){
-            System.out.print("dice out of range in GameManager: setDice(int dice)");
+            System.out.print("dice out of range in FlyChess.GameManager: setDice(int dice)");
             System.exit(0);
         }
 
@@ -128,7 +128,7 @@ public class WifiServer_GameManager extends Thread{
     {
         //扔了骰子才可以进行选择
         if(waitingdice){
-            System.out.println("unexpected error in GameManager: setChoice(int choice)");
+            System.out.println("unexpected error in FlyChess.GameManager: setChoice(int choice)");
             System.exit(0);
         }
 
@@ -155,7 +155,7 @@ public class WifiServer_GameManager extends Thread{
     public Queue<Integer> getChessAvailable()
     {
         if(waitingdice){
-            System.out.println("Unexpected error in GameManager: getChessAvailable(int playerid)");
+            System.out.println("Unexpected error in FlyChess.GameManager: getChessAvailable(int playerid)");
             System.exit(0);
         }
         PlayerAI playerAI = (PlayerAI) player[getTurn()];
@@ -169,7 +169,7 @@ public class WifiServer_GameManager extends Thread{
         //只有玩家模式才可以转换位挂机
         if(player[playerid].getKind() != BasicAI.PEOPLE)
         {
-            System.out.println("Unexpected error in GameManager: switchToAI(int playerid)");
+            System.out.println("Unexpected error in FlyChess.GameManager: switchToAI(int playerid)");
             System.exit(0);
         }
 
@@ -184,7 +184,7 @@ public class WifiServer_GameManager extends Thread{
         //只有玩家AI模式才可以恢复为玩家模式，全自动AI不可以切换为玩家模式
         if(player[playerid].getKind() != BasicAI.PLAYERAI)
         {
-            System.out.println("Unexpected error in GameManager: switchToUser(int playerid)");
+            System.out.println("Unexpected error in FlyChess.GameManager: switchToUser(int playerid)");
             System.exit(0);
         }
 
@@ -198,7 +198,7 @@ public class WifiServer_GameManager extends Thread{
     {
         //只有扔了骰子AI才可以自动选择
         if(waitingdice){
-            System.out.println("Unexpected error in GameManager: getAIChoice(int playerid)");
+            System.out.println("Unexpected error in FlyChess.GameManager: getAIChoice(int playerid)");
             System.exit(0);
         }
         return player[getTurn()].ai_choice(dice,chessboard);
@@ -233,7 +233,7 @@ public class WifiServer_GameManager extends Thread{
         //只有选了棋子才能发生动作
         if(waitingchoice)
         {
-            System.out.println("Unexpected error in GameManager: actionlist()");
+            System.out.println("Unexpected error in FlyChess.GameManager: actionlist()");
             System.exit(0);
         }
 
@@ -460,7 +460,7 @@ public class WifiServer_GameManager extends Thread{
                     chess.setEndLine(dice);
 
 //                    //移动
-//                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
+//                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,dice);
 //                    queue.enqueue(action);
 
                     if(lastposition != chess.getEntry())
@@ -1070,7 +1070,7 @@ public class WifiServer_GameManager extends Thread{
 
 //        public void run() {
 //
-//        Queue<Action> actions;
+//        FlyChess.Queue<FlyChess.Action> actions;
 //        String str ="";
 //
 //

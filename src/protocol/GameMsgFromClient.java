@@ -5,6 +5,8 @@ import java.io.Serializable;
 //client
 //sendToServer 筛子数值
 //      选的棋子
+
+//仅用于游戏开始后的逻辑
 public class GameMsgFromClient implements Serializable {
     public static final int DICE_NUM = 0;                   //筛子数值            (dice)
     public static final int THE_CHESS_WHO_CHOOSE = 1;       //选的棋子            (chosenChess)
