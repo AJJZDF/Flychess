@@ -1,4 +1,4 @@
-package server;
+package server.LongSocket;
 
 import protocol.Protocol;
 import protocol.*;

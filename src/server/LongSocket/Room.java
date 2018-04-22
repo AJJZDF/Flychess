@@ -1,4 +1,4 @@
-package server;
+package server.LongSocket;
 
 import NetworkRoom4Unity.NetworkRoommateState;
 
@@ -14,6 +14,7 @@ public class Room {
     //存放四个人的socket对象
     //用vector（可能有俩人三人四人）
     public Vector<MyClient> roomMembers;
+
     public String roomName;
     public String roomMasterName;                           //房主名字，创建房间的时候绑定，用于判断当前玩家可不可以点开始游戏
 

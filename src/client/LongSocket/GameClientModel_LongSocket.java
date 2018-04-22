@@ -1,4 +1,4 @@
-package client;
+package client.LongSocket;
 
 import protocol.MsgLogic;
 import protocol.Protocol;

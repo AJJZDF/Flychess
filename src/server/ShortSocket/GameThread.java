@@ -1,4 +1,4 @@
-package server; /**
+package server.ShortSocket; /**
  * Created by gitfan on 4/15/18.
  */
 

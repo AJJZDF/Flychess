@@ -1,4 +1,4 @@
-package server;
+package server.ShortSocket;
 
 import protocol.*;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 public class GameServer {
 
     Map<String,Room> rooms = new HashMap<>();//房间
-    Map<String,GameThread> gameThreads = new HashMap<>();//所有的游戏控制线程
+    Map<String, GameThread> gameThreads = new HashMap<>();//所有的游戏控制线程
 
 
     //返回在线的房间给客户端:vector<string>的形式
@@ -90,11 +90,11 @@ public class GameServer {
 
     }
 
-    class Singel_Server extends Thread
+    class ChildThread extends Thread
     {
         Socket socket;
 
-        Singel_Server(Socket socket)
+        ChildThread(Socket socket)
         {
             this.socket = socket;
         }
@@ -132,7 +132,7 @@ public class GameServer {
 
             Socket socket = server.accept();
 
-            threadPool.submit(new Singel_Server(socket));
+            threadPool.submit(new ChildThread(socket));
         }
     }
 
