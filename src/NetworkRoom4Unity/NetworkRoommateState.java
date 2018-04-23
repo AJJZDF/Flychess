@@ -2,7 +2,7 @@ package NetworkRoom4Unity;
 
 import java.io.Serializable;
 
-public class NetworkRoomAction implements Serializable{
+public class NetworkRoommateState implements Serializable{
 
 
     public static final int STATE_BAN = 1;             //ban掉                  (posId  null    null   STATE_BAN)
@@ -16,18 +16,18 @@ public class NetworkRoomAction implements Serializable{
     private String playerName;  //playerId玩家绑定了名字
     private int state;         //状态
 
-    NetworkRoomAction(int posId,int playerId,String playerName,int state){
+    NetworkRoommateState(int posId, int playerId, String playerName, int state){
         this.posId=posId;
         this.playerId=playerId;
         this.playerName=playerName;
         this.state=state;
     }
-    public NetworkRoomAction()
+    public NetworkRoommateState()
     {
         this.posId=-1;
         this.playerId=-1;
         this.playerName="null";
-        this.state=-1;
+        this.state=STATE_WAITCHOOSE;
     }
     public int getPlayerId() {
         return playerId;
@@ -41,6 +41,23 @@ public class NetworkRoomAction implements Serializable{
     public String getPlayerName() {
         return playerName;
     }
+
+    public void setPosId(int posId) {
+        this.posId = posId;
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
 
     @Override
     public String toString() {

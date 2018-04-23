@@ -1,4 +1,4 @@
-package server;
+package server.LongSocket;
 
 import protocol.Protocol;
 import protocol.*;
@@ -12,7 +12,7 @@ import java.util.Vector;
 
 import static java.lang.Thread.sleep;
 
-public class ServerManagerModel {
+public class ServerManagerModel_LongSocket {
 
     private Vector<MyClient> vec_clients;                //存储已经accept的client
     private Map<Socket,Integer> map_client2Index;        //映射socket到Vector中的index
@@ -43,7 +43,7 @@ public class ServerManagerModel {
 //```````````房间function
 
 
-    ServerManagerModel(){
+    ServerManagerModel_LongSocket(){
         vec_clients=new Vector<MyClient>();
         map_client2Index=new HashMap<Socket,Integer>();
         map_roomName2Room=new HashMap<>();
@@ -193,7 +193,7 @@ public class ServerManagerModel {
     }
 
     public static void main(String[] args) {
-        ServerManagerModel serverManagerTest=new ServerManagerModel();
+        ServerManagerModel_LongSocket serverManagerTest=new ServerManagerModel_LongSocket();
         serverManagerTest.run();
 
     }

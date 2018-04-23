@@ -6,6 +6,8 @@ import java.util.Vector;
 //send2Client  谁的回合
 //             可选棋子
 //             逻辑序列
+
+//仅用于游戏开始后的逻辑
 public class GameMsgFromServer implements Serializable {
     public final static int NOW_YOUR_COLOR_HAVE_BEEN_INIT=0;           //自身被初始化的颜色       (myColor)
     public final static int WHOSE_TURN=1;                              //谁的回合                 (nowTurnColor)

@@ -1,3 +1,5 @@
+package FlyChess;
+
 /**
  * Created by gitfan on 3/28/18.
  */
@@ -290,7 +292,7 @@ public class Chess {
     public void insertToIndexList(Pair person)
     {
         if(indexlist == null){
-            System.out.print("indexlist is null in Chess: insertToIndexList(Pair person)");
+            System.out.print("indexlist is null in FlyChess.Chess: insertToIndexList(FlyChess.Pair person)");
             System.exit(0);
         }
         this.indexlist.enqueue(person);
@@ -298,7 +300,7 @@ public class Chess {
     public void clearIndexList()
     {
         if(indexlist == null){
-            System.out.print("indexlist is null in Chess:  clearIndexList()");
+            System.out.print("indexlist is null in FlyChess.Chess:  clearIndexList()");
             System.exit(0);
         }
         while(!indexlist.isEmpty()) indexlist.dequeue();

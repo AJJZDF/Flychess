@@ -1,3 +1,5 @@
+package FlyChess;
+
 /**
  * Created by gitfan on 3/26/18.
  */
@@ -13,7 +15,7 @@ public class BasicAI {
     public BasicAI(int kind,int color){
 
         if(illegalKind(kind)){
-            System.out.println("illegal kind in BasicAI: BasicAI(int kind,int color)");
+            System.out.println("illegal kind in FlyChess.BasicAI: FlyChess.BasicAI(int kind,int color)");
             System.exit(0);
         }
         else this.kind = kind;
@@ -39,11 +41,11 @@ public class BasicAI {
     public void setChess(int index,Chess chess)
     {
         if(illegalIndex(index)){
-            System.out.print("index out of range in BasicAI: setChess(int index,Chess chess)");
+            System.out.print("index out of range in FlyChess.BasicAI: setChess(int index,FlyChess.Chess chess)");
             System.exit(0);
         }
         if(chess == null){
-            System.out.print("chess in null in BasicAI:setChess(int index,Chess chess)");
+            System.out.print("chess in null in FlyChess.BasicAI:setChess(int index,FlyChess.Chess chess)");
             System.exit(0);
         }
         this.chesslist[index] = chess;
@@ -52,7 +54,7 @@ public class BasicAI {
     public Chess getChess(int index)
     {
         if(illegalIndex(index)){
-            System.out.print("index out of range in BasicAI: getChess(int index,Chess chess)");
+            System.out.print("index out of range in FlyChess.BasicAI: getChess(int index,FlyChess.Chess chess)");
             System.exit(0);
         }
         return this.chesslist[index];

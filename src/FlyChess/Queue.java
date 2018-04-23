@@ -1,4 +1,4 @@
-/**
+package FlyChess; /**
  * Created by gitfan on 3/26/18.
  */
 import java.util.Iterator;
@@ -50,7 +50,7 @@ public class Queue<Item> implements Iterable<Item> {
      * @throws NoSuchElementException if this queue is empty
      */
     public Item peek() {
-        if (isEmpty()) throw new NoSuchElementException("Queue underflow");
+        if (isEmpty()) throw new NoSuchElementException("FlyChess.Queue underflow");
         return first.item;
     }
 
@@ -76,7 +76,7 @@ public class Queue<Item> implements Iterable<Item> {
      * @throws NoSuchElementException if this queue is empty
      */
     public Item dequeue() {
-        if (isEmpty()) throw new NoSuchElementException("Queue underflow");
+        if (isEmpty()) throw new NoSuchElementException("FlyChess.Queue underflow");
         Item item = first.item;
         first = first.next;
         n--;
@@ -128,7 +128,7 @@ public class Queue<Item> implements Iterable<Item> {
 
 
     /**
-     * Unit tests the {@code Queue} data type.
+     * Unit tests the {@code FlyChess.Queue} data type.
      *
      * @param args the command-line arguments
      */
