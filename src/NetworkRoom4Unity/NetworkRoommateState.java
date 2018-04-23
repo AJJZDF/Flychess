@@ -11,26 +11,29 @@ public class NetworkRoommateState implements Serializable{
     public static final int STATE_WAITCHOOSE=4;        //初始状态 等待          (posId  null    null   STATE_WAITCHOOSE)
     public static final int STATE_READY=5;             //准备号了               (posId  playerid    playerName    STATE_READY)
 
+
+
+
     private int posId;          //对应的位置id,              取值[0,3]
-    private int playerId;       //第几个玩家，从0开始数起。     取值[0,3]
+    private int playerKind;       //玩家类型: 1p,2p,3p,4p对应取值: 1,2,3,4,5;
     private String playerName;  //playerId玩家绑定了名字
     private int state;         //状态
 
     NetworkRoommateState(int posId, int playerId, String playerName, int state){
         this.posId=posId;
-        this.playerId=playerId;
+        this.playerKind=playerId;
         this.playerName=playerName;
         this.state=state;
     }
     public NetworkRoommateState()
     {
         this.posId=-1;
-        this.playerId=-1;
+        this.playerKind=-1;
         this.playerName="null";
         this.state=STATE_WAITCHOOSE;
     }
-    public int getPlayerId() {
-        return playerId;
+    public int getPlayerKind() {
+        return playerKind;
     }
     public int getPosId() {
         return posId;
@@ -46,8 +49,8 @@ public class NetworkRoommateState implements Serializable{
         this.posId = posId;
     }
 
-    public void setPlayerId(int playerId) {
-        this.playerId = playerId;
+    public void setPlayerKind(int playerKind) {
+        this.playerKind = playerKind;
     }
 
     public void setPlayerName(String playerName) {
@@ -63,8 +66,8 @@ public class NetworkRoommateState implements Serializable{
     public String toString() {
         String str="[ posId = "
                 +this.posId
-                +"  playerId = "
-                +this.playerId
+                +"  playerKind = "
+                +this.playerKind
                 +"  playerName = "
                 +this.playerName;
         if(this.state == STATE_BAN) str+="  state = STATE_BAN ]";
@@ -79,7 +82,7 @@ public class NetworkRoommateState implements Serializable{
         String str = "";
         str += Integer.toString(this.posId);
         str += " ";
-        str += Integer.toString(this.playerId);
+        str += Integer.toString(this.playerKind);
         str += " ";
         str += this.playerName;
         str += " ";
