@@ -71,6 +71,11 @@ public class Chess {
         originPos[GREEN] = 39;
     }
 
+    public static int get_start_number(int color)
+    {
+        return originPos[color];
+    }
+
     //棋子状态
     private int status;
 
@@ -144,7 +149,7 @@ public class Chess {
     private void setColor(int color)
     {
         if(illegalColor(color)){
-            System.out.print("color out of range in \'setColor\',color: " + color);
+            System.err.print("color out of range in \'setColor\',color: " + color);
             System.exit(0);
         }
         this.color = color;
@@ -183,7 +188,7 @@ public class Chess {
     public void setPos(int pos)
     {
         if(illegalPos(pos)) {
-            System.out.print("pos out of range in \'setPos\',pos: " + pos);
+            System.err.print("pos out of range in \'setPos\',pos: " + pos);
             System.exit(0);
         }
         this.pos = pos;
@@ -212,7 +217,7 @@ public class Chess {
     public void setStatus(int status)
     {
         if(illegalStatus(status)){
-            System.out.print("status out of range in \'setStatus\',status: " + status);
+            System.err.print("status out of range in \'setStatus\',status: " + status);
             System.exit(0);
         }
         this.status = status;
@@ -285,6 +290,11 @@ public class Chess {
         }
         else return 59;
     }
+    //返回棋子列表的数目
+    public int get_chess_cnt()
+    {
+        return indexlist.size();
+    }
     public Queue<Pair> getIndexlist()
     {
         return indexlist;
@@ -292,7 +302,7 @@ public class Chess {
     public void insertToIndexList(Pair person)
     {
         if(indexlist == null){
-            System.out.print("indexlist is null in FlyChess.Chess: insertToIndexList(FlyChess.Pair person)");
+            System.err.print("indexlist is null in Chess: insertToIndexList(Pair person)");
             System.exit(0);
         }
         this.indexlist.enqueue(person);
@@ -300,7 +310,7 @@ public class Chess {
     public void clearIndexList()
     {
         if(indexlist == null){
-            System.out.print("indexlist is null in FlyChess.Chess:  clearIndexList()");
+            System.err.print("indexlist is null in Chess:  clearIndexList()");
             System.exit(0);
         }
         while(!indexlist.isEmpty()) indexlist.dequeue();

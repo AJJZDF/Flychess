@@ -1,4 +1,9 @@
-package FlyChess;
+package  FlyChess;
+
+import java.io.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Vector;
 
 /**
  * Created by gitfan on 3/29/18.
@@ -11,121 +16,260 @@ public class GameManager{
     private Chess chessboard[];
     private boolean waitingdice;//还在等待扔骰子
     private boolean waitingchoice;//还在等待选择
+    private boolean waitingEndturn; // 结束本轮回合
 
     private int dice;//当前的骰子
     private int turn;//当前轮到谁？
     private int choice;//当前的选择是什么?
 
-    private int players_cnt = -1;
+    private int players_cnt = -1;//玩家人数(包括AI)
+    private int finish_cnt = 0;//目前完成的人数
 
-    public GameManager(BasicAI red,BasicAI yellow,BasicAI blue,BasicAI green)
+    public static int AI_KIND = 0;//AI类型
+    public static int PLAYER_KIND = 1;//玩家类型
+    public static int NOT_USE_KIND = 2;//没有使用
+    private static int FINISHED = 3; //已经完成
+
+    private int pos_status[];    //位置状态
+    private String name[];
+
+    private StringBuilder history;
+
+    //一个四个数组的元素初始化
+    public GameManager(int [] _gamekind)
+    {
+        if(_gamekind.length != 4)
+        {
+            System.err.println("Error in GameManager(int [] pos_status)");
+            System.exit(1);
+        }
+
+        init();
+
+        for(int i = 0 ; i < 4; i++){
+            pos_status[i] = _gamekind[i];
+        }
+    }
+    //一个四个数组的元素初始化
+    public GameManager(int [] _gamekind,String name[])
+    {
+        if(_gamekind.length != 4)
+        {
+            System.err.println("Error in GameManager(int [] pos_status)");
+            System.exit(1);
+        }
+
+        init();
+
+        this.name = name;
+        for(int i = 0 ; i < 4; i++){
+            pos_status[i] = _gamekind[i];
+        }
+    }
+
+    //获取第一个玩游戏的玩家
+    private int get_first_turn()
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            if(pos_status[i] == AI_KIND || pos_status[i] == PLAYER_KIND)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //显示扔骰子
+    public  Action show_dice(){
+        return new Action(0,0,Action.SHOW_DICE, 0);
+    }
+
+    //隐藏扔骰子
+    public Action hide_dice(){
+        return new Action(0,0,Action.HIDE_DICE, 0);
+    }
+
+
+    private void init()
     {
         player = new BasicAI[4];
-        player[0] = red;
-        player[1] = yellow;
-        player[2] = blue;
-        player[3] = green;
         chessboard = new Chess[72];
         for(int i = 0 ; i < 72; i++)
         {
             chessboard[i] = new Chess(i);
         }
-        dice = -1;
-        choice = -1;
-        turn = 0;
 
         waitingdice = true;
         waitingchoice = true;
 
-        players_cnt = 4;
+        dice = -1;
+        choice = -1;
+
+        players_cnt = 0;
+        finish_cnt = 0;
+
+        pos_status = new int[4];
+
+        history = new StringBuilder();
 
     }
-    public GameManager(BasicAI red,BasicAI yellow,BasicAI blue)
+
+    //初始化游戏：隐藏无关的棋子
+    public Queue<Action> init_game()
     {
-        player = new BasicAI[3];
-        player[0] = red;
-        player[1] = yellow;
-        player[2] = blue;
-        chessboard = new Chess[72];
-        for(int i = 0 ; i < 72; i++)
-        {
-            chessboard[i] = new Chess(i);
+        long st_time = new Date().getTime();
+        turn = get_first_turn();
+
+
+
+        for(int i = 0 ; i < 4; i++){
+            if(pos_status[i] == AI_KIND){
+                player[i] = new AutoAI(i);
+                players_cnt ++ ;
+                player[i].set_start_time(st_time);
+            }
+            else if(pos_status[i] == PLAYER_KIND){
+                player[i] = new PlayerAI(i);
+                players_cnt ++;
+                player[i].set_start_time(st_time);
+            }
+            if(pos_status[i] != NOT_USE_KIND)
+            {
+                player[i].setName(name[i]);
+            }
         }
-        dice = -1;
-        choice = -1;
-        turn = 0;
 
-        waitingdice = true;
-        waitingchoice = true;
+        //history 第一行:初始化游戏
 
-        players_cnt = 3;
-    }
-    public GameManager(BasicAI red,BasicAI blue)
-    {
-        player = new BasicAI[3];//好像必须得三个...虽然只需要两个位置..但是蓝色玩家一定要处于第2个位置上（从0数起）
-        player[0] = red;
-        player[2] = blue;
-        chessboard = new Chess[72];
-        for(int i = 0 ; i < 72; i++)
+        Queue<Action> queue = new Queue<>();
+        Action action;
+        int code = 0;
+        for(int i = 0; i < 4; i++)
         {
-            chessboard[i] = new Chess(i);
+            if(pos_status[i] == NOT_USE_KIND)
+            {
+                for(int j = 0 ; j < 4; j++)
+                {
+                    action = new Action(i,j,Action.HIDE,-1);
+                    queue.enqueue(action);
+                    history.append(" " + action.toActionString());
+                }
+                code = code*10 + 2;
+            }
+            else code = code*10 + 1;
         }
-        dice = -1;
-        choice = -1;
-        turn = 0;
 
-        waitingdice = true;
-        waitingchoice = true;
+        action = new Action(code,0,Action.HIDE_SCROLL_BAR,0);
+        queue.enqueue(action);
+        history.append(" " + action.toActionString() + "\n");
 
-        players_cnt = 2;
+        return queue;
     }
 
     //返回下一次轮到的位置
-    //如果是四个人，步长为1，如果是两个人，步长是2，如果是三个人，则红到黄，黄到蓝步长为1，但蓝不经过绿，直接到红，步长为2
     private void nextTurn()
     {
-        if(players_cnt == 4) turn = (turn + 1)%4;
-        else if(players_cnt == 2) turn = (turn +2)%4;
-        else if(players_cnt == 3)
+        while(true)
         {
-            //三个玩家
-            if(turn == 2) turn = 0;//蓝色 --> 红色
-            else turn = (turn + 1) %4;
+            turn = (turn + 1)%4;//加一
+            if(pos_status[turn] != NOT_USE_KIND && pos_status[turn] != FINISHED) break;
         }
     }
 
-
-    public boolean isGameOver()
+    public boolean isGameOver(boolean muti_round)
     {
-
-        if(players_cnt == 4 || players_cnt == 3)
+        if(muti_round)
         {
-            for(int i = 0 ; i < players_cnt ;i++){
-                if(player[i].isFinish()){
-                    return true;
+            for(int i = 0; i < 4; i++)
+            {
+                if(pos_status[i] != NOT_USE_KIND && pos_status[i] != FINISHED)
+                {
+                    if(player[i].isFinish()){
+
+                        pos_status[i] = FINISHED;
+                        finish_cnt += 1;
+                        long ed_time = new Date().getTime();
+                        player[i].set_end_time(ed_time);
+                        player[i].set_score((players_cnt - finish_cnt +1 )*1000);
+
+                        String str = "";
+
+                        if(i == Chess.RED) str = "红色玩家";
+                        else if(i == Chess.YELLOW) str = "黄色玩家";
+                        else if(i == Chess.BLUE) str = "蓝色玩家";
+                        else str = "绿色玩家";
+
+                        System.out.println(str+"完成");
+                    }
+                }
+            }
+
+            if(finish_cnt + 1 == players_cnt)
+            {
+                for(int i = 0; i < 4; i++)
+                {
+                    if(pos_status[i] != NOT_USE_KIND && pos_status[i] != FINISHED)
+                    {
+                        player[i].set_score(1000);
+                        player[i].set_end_time(new Date().getTime());
+                        pos_status[i] = FINISHED;
+                        break;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                if(pos_status[i] != NOT_USE_KIND)
+                {
+                    if(player[i].isFinish()){
+                        return true;
+                    }
                 }
             }
             return false;
         }
-        else if(players_cnt == 2)
+    }
+
+    //恢复棋盘需要的一系列动作
+    private String recover_game()
+    {
+        StringBuilder str = new StringBuilder();
+        for(int i = 0; i < 4;i++)
         {
-            if(player[0].isFinish() || player[2].isFinish()) return true;
-            else return false;
+            if(player[i] != null)
+            {
+                str.append(player[i].to_recover());
+            }
         }
-        //未定义的人数...直接返回false？
-        return false;
+        str.append("\n");//换行符
+        return str.toString();
     }
     //提供给扔骰子的按钮，按按钮时调用这个函数
     public void setDice(int dice){
+
         if(dice <= 0 || dice > 6){
-            System.out.print("dice out of range in FlyChess.GameManager: setDice(int dice)");
+            System.err.println("dice out of range in GameManager: setDice(int dice)");
             System.exit(0);
         }
 
         waitingdice = false;//玩家已经投掷骰子了
+        waitingEndturn = true;//正在等待本轮回合结束
         this.dice = dice;
         //扔完骰子后开始等待玩家选择棋子
         this.waitingchoice = true;
+
+        //历史
+        history.append(recover_game());//第一行:恢复为当前游戏需要的指令
+        Action action = new Action(-1,-1,Action.THROW_DICE_BY_NUMBER,dice);
+        history.append(" " + action.toActionString()+"\n");//第二行:当前动作序列
+
+
     }
     //提供给点击棋子的按钮，玩家点击棋子时调用这个函数
     //用来设置当前选择的棋子,如果没有棋子可以选择请使用setChoice(-1)
@@ -133,7 +277,7 @@ public class GameManager{
     {
         //扔了骰子才可以进行选择
         if(waitingdice){
-            System.out.println("unexpected error in FlyChess.GameManager: setChoice(int choice)");
+            System.err.println("unexpected error in GameManager: setChoice(int choice)");
             System.exit(0);
         }
 
@@ -143,6 +287,13 @@ public class GameManager{
         //为下一轮游戏做准备
         waitingdice = true;
     }
+
+    //设置本轮回合结束
+    public void setEndthisturn()
+    {
+        waitingEndturn = false;
+    }
+
     //检测骰子是否已经准备好
     public boolean waitDice()
     {
@@ -155,13 +306,18 @@ public class GameManager{
         return waitingchoice;
     }
 
+    //检测本轮次是否已经结束
+    public boolean waitEndTurn(){return waitingEndturn;}
+
+
+
     //返回当前玩家可以选择的棋子
     //前提：扔了骰子才可以调用
     //如果返回的queue的size为0，那么没有棋子可以选择
     public Queue<Integer> getChessAvailable()
     {
         if(waitingdice){
-            System.out.println("Unexpected error in FlyChess.GameManager: getChessAvailable(int playerid)");
+            System.err.println("Unexpected error in GameManager: getChessAvailable(int playerid)");
             System.exit(0);
         }
         PlayerAI playerAI = (PlayerAI) player[getTurn()];
@@ -174,7 +330,7 @@ public class GameManager{
     public Queue<Action> getChessAvailable_Action()
     {
         if(waitingdice){
-            System.out.println("Unexpected error in FlyChess.GameManager: getChessAvailable(int playerid)");
+            System.err.println("Unexpected error in GameManager: getChessAvailable(int playerid)");
             System.exit(0);
         }
         PlayerAI playerAI = (PlayerAI) player[getTurn()];
@@ -187,6 +343,15 @@ public class GameManager{
         return actionlist;
     }
 
+    //0 -  3 的数字
+    public boolean isChoiceAvailable(int choice)
+    {
+        for(Integer i:getChessAvailable())
+        {
+            if(choice == i) return true;
+        }
+        return false;
+    }
 
     //设置玩家为挂机模式
     public void switchToAI(int playerid)
@@ -194,7 +359,7 @@ public class GameManager{
         //只有玩家模式才可以转换位挂机
         if(player[playerid].getKind() != BasicAI.PEOPLE)
         {
-            System.out.println("Unexpected error in FlyChess.GameManager: switchToAI(int playerid)");
+            System.err.println("Unexpected error in GameManager: switchToAI(int playerid)");
             System.exit(0);
         }
 
@@ -209,7 +374,7 @@ public class GameManager{
         //只有玩家AI模式才可以恢复为玩家模式，全自动AI不可以切换为玩家模式
         if(player[playerid].getKind() != BasicAI.PLAYERAI)
         {
-            System.out.println("Unexpected error in FlyChess.GameManager: switchToUser(int playerid)");
+            System.err.println("Unexpected error in GameManager: switchToUser(int playerid)");
             System.exit(0);
         }
 
@@ -223,7 +388,7 @@ public class GameManager{
     {
         //只有扔了骰子AI才可以自动选择
         if(waitingdice){
-            System.out.println("Unexpected error in FlyChess.GameManager: getAIChoice(int playerid)");
+            System.err.println("Unexpected error in GameManager: getAIChoice(int playerid)");
             System.exit(0);
         }
         return player[getTurn()].ai_choice(dice,chessboard);
@@ -236,6 +401,31 @@ public class GameManager{
     public int getTurn()
     {
         return turn;
+    }
+
+    public Action getTurn_Action()
+    {
+        history.append(recover_game());
+
+        Action action = new Action(getTurn(),0,Action.SHOWTURN,0);
+
+        history.append(action.toActionString() + "\n");
+
+        return action;
+    }
+
+    //设置开始游戏的第一个玩家
+    public void setTurn(int color)
+    {
+        if(color < 0 || color >= 4){
+            System.err.println("color out of range in GameManager: setTurn(int color)");
+            System.exit(1);
+        }
+        if(pos_status[color] == NOT_USE_KIND || pos_status[color] == FINISHED){
+            System.err.println("undefined color(player) in GameManager: setTurn(int color)");
+            System.exit(1);
+        }
+        turn = color;
     }
 
     //判断现在是不是AI在玩游戏
@@ -323,13 +513,102 @@ public class GameManager{
         return false;
     }
 
+    //显示排行榜
+    public Action show_ranking_list()
+    {
+        return new Action(0,0,Action.SHOW_RANKING_LIST);
+    }
+
+    //获取排行榜
+    public String get_ranking_list_by_time_with_name()
+    {
+        BasicAI [] ai_list = new BasicAI[4];
+        int list_cnt = 0;
+        for(int i = 0; i < 4;i++)
+        {
+            if(pos_status[i] != NOT_USE_KIND){
+                ai_list[list_cnt++] = new BasicAI(player[i]);
+            }
+        }
+
+        Arrays.sort(ai_list,0,list_cnt);
+
+        StringBuilder str = new StringBuilder();
+
+        str.append(1 + " " + ai_list[0].get_total_score_by_time_with_name());
+
+        for(int i = 1 ; i < list_cnt;i++)
+        {
+            str.append(" " + (i+1) + " " +ai_list[i].get_total_score_by_time_with_name());
+        }
+        for(int i = list_cnt; i < 4; i++)
+        {
+            str.append(" "+(i+1) +" -1  default_name 0 0 0");
+        }
+
+        return str.toString();
+    }
+
     //用户选完棋子后，产生的一系列动作
+    //在指令集后面加了结束回合指令
     public Queue<Action> actionlist()
+    {
+        //历史
+        history.append(recover_game());//第一行:恢复为当前游戏需要的指令(需要在没有产生动作序列之前)
+
+        Queue<Action> queue = pre_actionlist();
+        Action action = new Action(0,0,Action.ENDTHISTURN);
+        queue.enqueue(action);
+
+
+        for(Action act:queue)
+        {
+            history.append(" " + act.toActionString());//第二行:当前动作序列
+        }
+        history.append("\n");
+
+
+        return queue;
+    }
+
+    //获得历史记录
+    public String getHistory()
+    {
+        return history.toString();
+    }
+
+    //将历史记录写入文件
+    public void write_history_to_file() throws IOException {
+        File file = new File("/Replay");
+        if(!file.exists())
+        {
+            file.createNewFile();
+        }
+
+
+        //用时间作为文件名: eg:   2018-04-19-23:18
+        Date date = new Date();
+        String time_str = String.format("%tF",date);
+        time_str += String.format("-%tR",date);
+        System.out.println(time_str);
+
+
+        FileWriter fw = new FileWriter("/"+time_str);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(history.toString());
+        bw.flush();
+        fw.close();
+
+    }
+
+    //用户选完棋子后，产生的一系列动作
+    //没有结束回合指令
+    private Queue<Action> pre_actionlist()
     {
         //只有选了棋子才能发生动作
         if(waitingchoice)
         {
-            System.out.println("Unexpected error in FlyChess.GameManager: actionlist()");
+            System.err.println("Unexpected error in GameManager: actionlist()");
             System.exit(0);
         }
 
@@ -393,7 +672,7 @@ public class GameManager{
                 if(!chess.eatTest(chessboard[chess.getPos()]))
                 {
 //                    //初步移动
-//                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,dice);
+//                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
 //                    queue.enqueue(action);
 
                     action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
@@ -452,14 +731,14 @@ public class GameManager{
                 //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                 else if(chess.eatTest(chessboard[chess.getPos()]))
                 {
-//                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,dice - 1);
+//                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - 1);
 //                    if(dice - 1 != 0) queue.enqueue(action);
 
                     boolean lefflag = false;
 
                     if(dice - 1 != 0)
                     {
-//                        action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,dice - 1);
+//                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - 1);
 //                        queue.enqueue(action);
 
                         leftStep = dice -1;
@@ -516,11 +795,11 @@ public class GameManager{
                         queue.enqueue(action);
                     }
 
-//                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,1);
+//                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
 //                    queue.enqueue(action);
 
                     leftStep = 1;
-                    turnKind = turnTest(currPos,currPos + 1);
+                    turnKind = turnTest(currPos,(currPos + 1)%52);
                     //需要左转
                     if(turnKind == LEFT)
                     {
@@ -548,7 +827,7 @@ public class GameManager{
                     {
                         action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
                         queue.enqueue(action);
-                        if(isRightCorner(currPos + 1))
+                        if(isRightCorner((currPos + 1)%52))
                         {
                             action = new Action(playerid,chessindex,Action.TURNLEFT);
                             queue.enqueue(action);
@@ -597,9 +876,9 @@ public class GameManager{
                     if(!chess.eatTest(chessboard[chess.getPos()]))
                     {
                         //移动
-//                        action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.QUICK_MOVE,4);
+//                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
 //                        queue.enqueue(action);
-                        turnKind = turnTest(currPos,currPos + leftStep);
+                        turnKind = turnTest(currPos,(currPos + leftStep)%52);
                         if(turnKind == LEFT)
                         {
                             //quickmove很烦啊，还要判断下是不是偶数，不是偶数需要分解
@@ -684,9 +963,9 @@ public class GameManager{
                     //记得更新别的玩家的棋子，自己的棋子，以及棋盘
                     else if(chess.eatTest(chessboard[chess.getPos()]))
                     {
-//                        action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.QUICK_MOVE,2);
+//                        action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
 //                        queue.enqueue(action);
-//                        action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,1);
+//                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
 //                        queue.enqueue(action);
 
                         leftStep = 2;
@@ -778,12 +1057,12 @@ public class GameManager{
                     chess.setEndLine(dice);
 
 //                    //移动
-//                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,dice);
+//                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
 //                    queue.enqueue(action);
 
                     if(lastposition != chess.getEntry())
                     {
-//                        action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,chess.getEntry() - lastposition);
+//                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,chess.getEntry() - lastposition);
 //                        queue.enqueue(action);
 
                         leftStep = chess.getEntry() - lastposition;
@@ -953,15 +1232,15 @@ public class GameManager{
                     chessboard[chess.getPos()].setStatus(Chess.STATUS_EMPTY);
                     chessboard[chess.getPos()].clearIndexList();
 
-                    currPos = chess.getPos();//4
-                    leftStep = dice;//2
+                    currPos = chess.getPos();//50
+                    leftStep = dice;//5
 
                     //基础移动
-                    chess.setPos((chess.getPos() + dice) % 52);//6
+                    chess.setPos((chess.getPos() + dice) % 52);//3
 
                     if( !chess.eatTest(chessboard[chess.getPos()]))
                     {
-//                        action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,dice);
+//                        action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice);
 //                        queue.enqueue(action);
 
                         turnKind = turnTest(currPos,(currPos + leftStep) % 52);
@@ -1118,15 +1397,15 @@ public class GameManager{
                         boolean turnrig = false;
                         boolean emptyspace = false;
 
-                        leftStep = dice -1;
-                        if(dice - 1 != 0)
+                        leftStep = dice -1;//4
+                        if(leftStep != 0)
                         {
-//                            action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,dice - 1);
+//                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,dice - 1);
 //                            queue.enqueue(action);
 //5
 
                             // 0， 0+5=5
-                            turnKind = turnTest(currPos,currPos + leftStep);
+                            turnKind = turnTest(currPos,(currPos + leftStep)%52);
 
                             if(turnKind == LEFT)
                             {
@@ -1190,7 +1469,7 @@ public class GameManager{
 
 //                        if(turnlef)
 //                        {
-//                            action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,1);
+//                            action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
 //                            queue.enqueue(action);
 //                            leftStep -= 1;
 //                            currPos = (currPos + 1)%52;
@@ -1625,7 +1904,7 @@ public class GameManager{
 
                                 if(!chess.eatTest(chessboard[chess.getPos()]))
                                 {
-//                                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.QUICK_MOVE,4);
+//                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,4);
 //                                    queue.enqueue(action);
 
                                     turnKind = turnTest(currPos,(currPos + leftStep) %52);
@@ -1718,9 +1997,9 @@ public class GameManager{
                                 //吃掉
                                 else if(chess.eatTest(chessboard[chess.getPos()]))
                                 {
-//                                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.QUICK_MOVE,2);
+//                                    action = new Action(playerid,chessindex,Action.QUICK_MOVE,2);
 //                                    queue.enqueue(action);
-//                                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,1);
+//                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
 //                                    queue.enqueue(action);
 
                                     leftStep = 3;
@@ -1812,7 +2091,7 @@ public class GameManager{
                                         action = new Action(pair.playerId,pair.chessId,Action.FALLEN);
                                         queue.enqueue(action);
                                     }
-//                                    action = new FlyChess.Action(playerid,chessindex,FlyChess.Action.NORMAL_MOVE,1);
+//                                    action = new Action(playerid,chessindex,Action.NORMAL_MOVE,1);
 //                                    queue.enqueue(action);
 
                                     leftStep = 1;
@@ -1892,185 +2171,127 @@ public class GameManager{
             }
         }
     }
+    public static void main(String[] args) throws InterruptedException, IOException {
 
-    //    public void run() {
-//
-//        FlyChess.Queue<FlyChess.Action> actions;
-//        String str ="";
-//
-//
-//        while(!isGameOver())
-//        {
-//            //如果是联机模型，则向所有玩家发送现在轮到谁了
-//            //send_Current_Turn_To_AllPlayer
-//
-//            //不断扫描是不是有人扔了骰子
-//            while (waitDice()) try {
-//                UISimulator.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//
-//            //不断扫描是不是有人选择了棋子
-//            while (waitChoice()) try {
-//                UISimulator.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//            //后面的服务器模型时会用到
-//    }
-    public static void main(String[] args) throws InterruptedException {
-
-        //三个玩家必须要初始化为红，黄,蓝
-        GameManager gameManager_three = new GameManager(new AutoAI(Chess.RED),new AutoAI(Chess.YELLOW),new AutoAI(Chess.BLUE));
-
-        //两个玩家必须要初始化为红，蓝
-        GameManager gameManager_two = new GameManager(new AutoAI(Chess.RED),new AutoAI(Chess.BLUE));
+        GameManager gameManager = new GameManager(new int[]{GameManager.AI_KIND,GameManager.NOT_USE_KIND,GameManager.NOT_USE_KIND,GameManager.AI_KIND});
 
         String str;
-
-        if(gameManager_three.getTurn() == Chess.RED) str = "红色玩家";
-        else if(gameManager_three.getTurn() == Chess.YELLOW) str = "黄色玩家";
-        else if(gameManager_three.getTurn() == Chess.BLUE) str = "蓝色玩家";
-        else str = "绿色玩家";
-
-        System.out.println("现在轮到" + str);
-        System.out.println("throwing a dice...");
-
-        int dice1 =2;
-        int choice1 = 0;
-
-        Chess chess = new Chess(new Pair(Chess.RED,0),Chess.RED);
-        chess.setStatus(Chess.STATUS_FLYING);
-        chess.setPos(45);
-        gameManager_three.chessboard[45] = new Chess(chess);
-        gameManager_three.player[Chess.RED].chesslist[0] = new Chess(chess);
-
-        chess = new Chess(new Pair(Chess.YELLOW,0),Chess.YELLOW);
-        chess.setStatus(Chess.STATUS_FLYING);
-        chess.setPos(47);
-        gameManager_three.chessboard[47] = new Chess(chess);
-        gameManager_three.player[Chess.YELLOW].chesslist[0] = new Chess(chess);
-
-//        chess = new FlyChess.Chess(new FlyChess.Pair(FlyChess.Chess.BLUE,1),FlyChess.Chess.BLUE);
-//        chess.setStatus(FlyChess.Chess.STATUS_FLYING);
+//
+//
+//
+//        for (Action action:gameManager.init_game())
+//        {
+//            System.out.println(action);
+//        }
+//
+//        gameManager.nextTurn();
+//        if(gameManager.getTurn() == Chess.RED) str = "红色玩家";
+//        else if(gameManager.getTurn() == Chess.YELLOW) str = "黄色玩家";
+//        else if(gameManager.getTurn() == Chess.BLUE) str = "蓝色玩家";
+//        else str = "绿色玩家";
+//
+//        System.out.println("现在轮到" + str);
+//        System.out.println("throwing a dice...");
+//
+//        int dice1 = 5;
+//        int choice1 = 0;
+//
+//        Chess chess = new Chess(new Pair(Chess.RED,0),Chess.RED);
+//        chess.setStatus(Chess.STATUS_FLYING);
+//        chess.setPos(3);
+//        gameManager.chessboard[3] = new Chess(chess);
+//        gameManager.player[Chess.RED].chesslist[0] = new Chess(chess);
+//
+//        chess = new Chess(new Pair(Chess.GREEN,0),Chess.GREEN);
+//        chess.setStatus(Chess.STATUS_FLYING);
+//        chess.setPos(50);
+//        gameManager.chessboard[50] = new Chess(chess);
+//        gameManager.player[Chess.GREEN].chesslist[0] = new Chess(chess);
+//
+//        chess = new Chess(new Pair(Chess.BLUE,1),Chess.BLUE);
+//        chess.setStatus(Chess.STATUS_FLYING);
 //        chess.setPos(18);
-//        gameManager_three.chessboard[18] = new FlyChess.Chess(chess);
-//        gameManager_three.player[FlyChess.Chess.BLUE].chesslist[1] = new FlyChess.Chess(chess);
+//        gameManager.chessboard[18] = new Chess(chess);
+//        gameManager.player[Chess.BLUE].chesslist[1] = new Chess(chess);
 //
-//        chess = new FlyChess.Chess(new FlyChess.Pair(FlyChess.Chess.BLUE,0),FlyChess.Chess.BLUE);
-//        chess.setStatus(FlyChess.Chess.STATUS_FLYING);
+//        chess = new Chess(new Pair(Chess.BLUE,0),Chess.BLUE);
+//        chess.setStatus(Chess.STATUS_FLYING);
 //        chess.setPos(64);
-//        gameManager_three.chessboard[64] = new FlyChess.Chess(chess);
-//        gameManager_three.player[FlyChess.Chess.BLUE].chesslist[0] = new FlyChess.Chess(chess);
-
-
-
-
-//        chess = new FlyChess.Chess(new FlyChess.Pair(FlyChess.Chess.YELLOW,2),FlyChess.Chess.YELLOW);
-//        chess.setStatus(FlyChess.Chess.STATUS_FLYING);
+//        gameManager.chessboard[64] = new Chess(chess);
+//        gameManager.player[Chess.BLUE].chesslist[0] = new Chess(chess);
+//
+//
+//        chess = new Chess(new Pair(Chess.YELLOW,2),Chess.YELLOW);
+//        chess.setStatus(Chess.STATUS_FLYING);
 //        chess.setPos(34);
-//        gameManager_three.chessboard[34] = new FlyChess.Chess(chess);
-//        gameManager_three.player[FlyChess.Chess.YELLOW].chesslist[2] = new FlyChess.Chess(chess);
+//        gameManager.chessboard[34] = new Chess(chess);
+//        gameManager.player[Chess.YELLOW].chesslist[2] = new Chess(chess);
 
-        System.out.println("dice: " + dice1);
-
-        gameManager_three.setDice(dice1);
-
-        System.out.println("selecting a choice...");
-
-        gameManager_three.setChoice(choice1);
-
-        System.out.println("choice: " + choice1);
-
-        Queue<Action> actions1 = gameManager_three.actionlist();
-        for(Action action:actions1)
-        {
-            System.out.println(action);
-        }
-
+//        System.out.println("dice: " + dice1);
 //
-
-//        while(!gameManager_three.isGameOver())
+//        gameManager.setDice(dice1);
+//
+//        System.out.println("selecting a choice...");
+//
+//        gameManager.setChoice(choice1);
+//
+//        System.out.println("choice: " + choice1);
+//
+//        Queue<Action> actions1 = gameManager.actionlist();
+//        for(Action action:actions1)
 //        {
-//            if(gameManager_three.getTurn() == FlyChess.Chess.RED) str = "红色玩家";
-//            else if(gameManager_three.getTurn() == FlyChess.Chess.YELLOW) str = "黄色玩家";
-//            else if(gameManager_three.getTurn() == FlyChess.Chess.BLUE) str = "蓝色玩家";
+//            System.out.println(action);
+//        }
+
+
+//        /**********************************************************************/
+//
+//        System.out.println(gameManager.init_game());
+//        while(!gameManager.isGameOver(true))
+//        {
+//            if(gameManager.getTurn() == Chess.RED) str = "红色玩家";
+//            else if(gameManager.getTurn() == Chess.YELLOW) str = "黄色玩家";
+//            else if(gameManager.getTurn() == Chess.BLUE) str = "蓝色玩家";
 //            else str = "绿色玩家";
 //
-//            System.out.println("现在轮到" + str);
+//            //System.out.println("现在轮到" + str);
 //
-//            System.out.println("throwing a dice...");
-//            Thread.sleep(2);
+//            //System.out.println("throwing a dice...");
+////            Thread.sleep(2);
 //
 //            int dice = ((int)(Math.random()*1000000))%6 + 1;
 //
-//            System.out.println("dice: " + dice);
+//            //System.out.println("dice: " + dice);
 //
-//            gameManager_three.setDice(dice);
+//            gameManager.setDice(dice);
 //
-//            System.out.println("selecting a choice...");
+//            //System.out.println("selecting a choice...");
 //
-//            Thread.sleep(1);
+//            Thread.sleep(10);
 //
-//            int choice = gameManager_three.getAIChoice();
+//            int choice = gameManager.getAIChoice();
 //
-//            gameManager_three.setChoice(choice);
+//            gameManager.setChoice(choice);
 //
-//            System.out.println("choice: " + choice);
+//            //System.out.println("choice: " + choice);
 //
 //
-//            FlyChess.Queue<FlyChess.Action> actions = gameManager_three.actionlist();
+//            Queue<Action> actions = gameManager.actionlist();
 //
-//            for(FlyChess.Action action:actions)
+//            for(Action action:actions)
 //            {
-//                System.out.println(action);
+//                //System.out.println(action);
 //            }
-//            Thread.sleep(1);
+//            Thread.sleep(10);
 //        }
 //
-//        System.out.println("/****************************************************************/");
+//        System.out.println(gameManager.getHistory());
 //
+//        //System.out.println(gameManager.show_ranking_list());
+//        //System.out.println(gameManager.get_ranking_list_by_time());
+//        //System.out.println(gameManager.get_ranking_list_by_time_with_name());
 //
-//
-//        while(!gameManager_two.isGameOver())
-//        {
-//            if(gameManager_two.getTurn() == FlyChess.Chess.RED) str = "红色玩家";
-//            else if(gameManager_two.getTurn() == FlyChess.Chess.YELLOW) str = "黄色玩家";
-//            else if(gameManager_two.getTurn() == FlyChess.Chess.BLUE) str = "蓝色玩家";
-//            else str = "绿色玩家";
-//
-//            System.out.println("现在轮到" + str);
-//
-//            System.out.println("throwing a dice...");
-//            Thread.sleep(2);
-//
-//            int dice = ((int)(Math.random()*1000000))%6 + 1;
-//
-//            System.out.println("dice: " + dice);
-//
-//            gameManager_two.setDice(dice);
-//
-//            System.out.println("selecting a choice...");
-//
-//            Thread.sleep(1);
-//
-//            int choice = gameManager_two.getAIChoice();
-//
-//            gameManager_two.setChoice(choice);
-//
-//            System.out.println("choice: " + choice);
-//
-//
-//            FlyChess.Queue<FlyChess.Action> actions = gameManager_two.actionlist();
-//
-//            for(FlyChess.Action action:actions)
-//            {
-//                System.out.println(action);
-//            }
-//            Thread.sleep(1);
-//        }
+//        String curDir = System.getProperty("user.dir");
+//        //System.out.println("你当前的工作目录为 :" + curDir);
     }
 }

@@ -23,7 +23,7 @@ public class PlayerAI extends BasicAI {
 
     private void setKind(int kind){
         if(kind != PEOPLE && kind != AUTOAI && kind != PLAYERAI){
-            System.out.print("unexpected kind in BasicAi,setKind(int kind)");
+            System.err.print("unexpected kind in BasicAi,setKind(int kind)");
             System.exit(0);
         }
         this.kind = kind;
@@ -72,5 +72,4 @@ public class PlayerAI extends BasicAI {
             return choose;
         }
     }
-
 }

@@ -3,19 +3,49 @@ package FlyChess;
 /**
  * Created by gitfan on 3/26/18.
  */
-public class BasicAI {
+public class BasicAI implements Comparable<BasicAI>{
 
     public int kind,color;
     public static int PEOPLE = 1,PLAYERAI = 2, AUTOAI = 3;//玩家模式，玩家挂机模式（可转换为玩家模式），全自动AI（无法转换为玩家模式）
 
     public Chess chesslist[];
 
+    private String name;//玩家名
+
+    private long st_time ;
+    private long ed_time ;
+
+    private int _score; //分数
+
+    public void set_score(int score)
+    {
+        this._score = score;
+    }
+
+    //复制拷贝函数
+    public BasicAI(BasicAI that)
+    {
+        this.kind = that.kind;
+        this.color = that.color;
+        this.chesslist = new Chess[that.chesslist.length];
+        for(int i = 0 ; i < chesslist.length; i++)
+        {
+            chesslist[i] = new Chess(that.chesslist[i]);
+        }
+
+        name = that.name;
+
+        this.st_time = that.st_time;
+        this.ed_time = that.ed_time;
+        this._score = that._score;
+    }
+
 
     //color 和 turn 一一对应
     public BasicAI(int kind,int color){
 
         if(illegalKind(kind)){
-            System.out.println("illegal kind in FlyChess.BasicAI: FlyChess.BasicAI(int kind,int color)");
+            System.err.println("illegal kind in BasicAI: BasicAI(int kind,int color)");
             System.exit(0);
         }
         else this.kind = kind;
@@ -25,27 +55,68 @@ public class BasicAI {
         for(int i = 0;i < 4 ; i++){
             chesslist[i] = new Chess(new Pair(color,i),color);
         }
+
+        if(color == Chess.RED) name = "红色玩家";
+        else if(color == Chess.YELLOW) name = "黄色玩家";
+        else if(color == Chess.BLUE) name = "蓝色玩家";
+        else name = "绿色玩家";
+    }
+    //color 和 turn 一一对应
+    public BasicAI(int kind,int color,String name){
+
+        if(illegalKind(kind)){
+            System.err.println("illegal kind in BasicAI: BasicAI(int kind,int color)");
+            System.exit(0);
+        }
+        else this.kind = kind;
+
+        setTurn(color);
+        chesslist = new Chess[4];
+        for(int i = 0;i < 4 ; i++){
+            chesslist[i] = new Chess(new Pair(color,i),color);
+        }
+
+        this.name = name;
+    }
+
+
+    //为玩家设置名字
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     //设置类型
     private void setTurn(int turn)
     {
         if(turn < 0 || turn >= 4){
-            System.out.print("unexpected value in BasicAi,setTurn(int turn)");
+            System.err.print("unexpected value in BasicAi,setTurn(int turn)");
             System.exit(0);
         }
         this.color = turn;
+    }
+
+    //设置时间起点
+    public void set_start_time(long st_time)
+    {
+        this.st_time = st_time;
+    }
+
+    //设置时间终点
+    public void set_end_time(long ed_time)
+    {
+        this.ed_time = ed_time;
     }
 
     //设置棋子
     public void setChess(int index,Chess chess)
     {
         if(illegalIndex(index)){
-            System.out.print("index out of range in FlyChess.BasicAI: setChess(int index,FlyChess.Chess chess)");
+            System.err.print("index out of range in BasicAI: setChess(int index,Chess chess)");
             System.exit(0);
         }
         if(chess == null){
-            System.out.print("chess in null in FlyChess.BasicAI:setChess(int index,FlyChess.Chess chess)");
+            System.err.print("chess in null in BasicAI:setChess(int index,Chess chess)");
             System.exit(0);
         }
         this.chesslist[index] = chess;
@@ -54,7 +125,7 @@ public class BasicAI {
     public Chess getChess(int index)
     {
         if(illegalIndex(index)){
-            System.out.print("index out of range in FlyChess.BasicAI: getChess(int index,FlyChess.Chess chess)");
+            System.err.print("index out of range in BasicAI: getChess(int index,Chess chess)");
             System.exit(0);
         }
         return this.chesslist[index];
@@ -78,6 +149,124 @@ public class BasicAI {
     {
         return this.kind;
     }
+
+    public int getColor(){
+        return color;
+    }
+
+    //获取名字
+    public String getName(){return name;}
+
+    //走到终点的棋子数
+    private int get_finish_cnt()
+    {
+        int cnt = 0;
+        for(int i = 0; i < 4; i++){
+            if(chesslist[i].getStatus() == Chess.STATUS_FINISH)
+            {
+                cnt ++;
+            }
+        }
+        return cnt;
+    }
+    //全部棋子走的路程
+    private int get_total_path_len()
+    {
+        int path_len = 0;
+        for(int i = 0; i < 4;i ++)
+        {
+            if(chesslist[i].getStatus() == Chess.STATUS_FLYING)
+                path_len += chesslist[i].get_chess_cnt()*( (chesslist[i].getPos() + 52 - Chess.get_start_number(getColor()))%52 );
+            else if(chesslist[i].getStatus() == Chess.STATUS_FINISH)
+                path_len += 56;
+        }
+        return path_len;
+    }
+    //分数评估:完成一个2500,没完成的计算步长,每个步长10分
+    private int get_score()
+    {
+        int score_total = 0;
+        for(int i = 0; i < 4;i ++)
+        {
+            if(chesslist[i].getStatus() == Chess.STATUS_FLYING)
+                score_total += chesslist[i].get_chess_cnt()*( (chesslist[i].getPos() + 52 - Chess.get_start_number(getColor()))%52 ) * 10;
+            else if(chesslist[i].getStatus() == Chess.STATUS_FINISH)
+                score_total += 2500;
+        }
+        if(score_total == 10000) score_total = 8888;//8888
+        return score_total;
+    }
+//    // 形式: 颜色 分数 完成棋子数 总路程
+//    public String get_total_score()
+//    {
+//        return (getColor() + " " + get_score() + " " + get_finish_cnt() +" " + get_total_path_len());
+//    }
+//
+//    // 形式: 颜色  名字 分数 完成棋子数 总路程
+//    public String get_total_score_with_name()
+//    {
+//        return (getColor() +" " + getName() + " " + get_score() + " " + get_finish_cnt() +" " + get_total_path_len());
+//    }
+
+    //形式: 颜色 名字 分数 完成数 时间
+    public String get_total_score_by_time_with_name()
+    {
+        long ms = ed_time - st_time;
+
+        long minute_ = ms/60000;
+        long second_ = (ms/1000)%60;
+
+        String minute = "";
+        String second = "";
+
+        if(minute_ < 10) minute ="0" + Long.toString(minute_);
+        else minute = Long.toString(minute_);
+
+        if(second_ < 10) second = "0" + Long.toString(second_);
+        else second = Long.toString(second_);
+
+        return (getColor() +" " + getName() + " " + _score + " "  + get_finish_cnt() + " " + minute +":" + second);
+    }
+
+    //形式: 颜色 分数 完成数 时间
+    public String get_total_score_by_time()
+    {
+        long ms = ed_time - st_time;
+
+        long minute_ = ms/60000;
+        long second_ = (ms/1000)%60;
+
+        String minute = "";
+        String second = "";
+
+        if(minute_ < 10) minute ="0" + Long.toString(minute_);
+        else minute = Long.toString(minute_);
+
+        if(second_ < 10) second = "0" + Long.toString(second_);
+        else second = Long.toString(second_);
+
+        return (getColor() + " " + _score + " "  + get_finish_cnt() + " " + minute +":" + second);
+    }
+
+
+//    @Override
+//    public int compareTo(BasicAI o) {
+//
+//        int score = get_score();
+//        int score_o = o.get_score();
+//        if(score < score_o) return 1;
+//        else if(score > score_o) return -1;
+//        else return 0;
+//    }
+
+    @Override
+    public int compareTo(BasicAI o) {
+        if(_score < o._score) return 1;
+        else if(_score > o._score) return -1;
+        else return 0;
+    }
+
+
 
     //获取可直接移动的棋子
     protected Queue<Integer> getAvailableMove()
@@ -199,6 +388,45 @@ public class BasicAI {
         }
     }
 
+    //要恢复为当前的玩家的四个棋子的状态,需要的动作
+    public String to_recover()
+    {
+        StringBuilder str = new StringBuilder();
+        Action action;
+        for(int i = 0; i < 4; i++)
+        {
+            //5种棋子状态:飞机砰，起飞线，飞行中途,已完成，隐藏状态(多个棋子合体时用到)
+            //public static int STATUS_AIRPORT = 0,STATUS_STARTLINE = 1 ,STATUS_FLYING = 2,STATUS_FINISH = 3,STATUS_HIDING = 4;
+            if(chesslist[i].getStatus() == Chess.STATUS_AIRPORT)
+            {
+                action = new Action(color,i,Action.FALLEN_INSTANT,0);
+                str.append(" " + action.toActionString());
+            }
+            else if(chesslist[i].getStatus() == Chess.STATUS_STARTLINE)
+            {
+                action = new Action(color,i,Action.FALLEN_INSTANT,0);
+                str.append(" " + action.toActionString());
+                action = new Action(color,i,Action.MOVE_TO_STARTLINE_INSTANT,0);
+                str.append(" " + action.toActionString());
+            }
+            else if(chesslist[i].getStatus() == Chess.STATUS_FLYING)
+            {
+                action = new Action(color,i,Action.RECOVER_CHESS_BY_POS,chesslist[i].getPos());
+                str.append(" " + action.toActionString());
+            }
+            else if(chesslist[i].getStatus() == Chess.STATUS_FINISH)
+            {
+                action = new Action(color,i,Action.FINISHED,0);
+                str.append(" " + action.toActionString());
+            }
+            else if(chesslist[i].getStatus() == Chess.STATUS_HIDING)
+            {
+                action = new Action(color,i,Action.HIDE,0);
+                str.append(" " + action.toActionString());
+            }
+        }
+        return str.toString();
+    }
 
 
 
