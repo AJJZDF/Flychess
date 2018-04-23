@@ -66,14 +66,14 @@ public class MsgLogic implements Serializable {
             return "[ MsgType = LOGI_MSG    "
                     +"Intent = C2S_CLIENT_TRY_JOIN_ROOM    "
                     +"client发送试图进入房间    "
-                    +"  Try Room Number = "
+                    +"  Try myRoom Number = "
                     +this.tryRoomNum
                     +" ]";
         if(this.type==MsgLogic.C2S_INROOM_QUIT_ROOM)//发送退出房间指令                    ( usr)
             return "[ MsgType = LOGI_MSG    "
                     +"Intent = C2S_INROOM_QUIT_ROOM    "
                     +"client Usr 发送退出房间指令    "
-                    +"  Quit Room Usr = "
+                    +"  Quit myRoom Usr = "
                     +this.usr
                     +" ]";
         if(this.type==MsgLogic.C2S_SEND_CREATE_ROOM)//client 发送房间名string 给server    （tryCreateRoomName）

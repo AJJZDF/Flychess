@@ -75,7 +75,7 @@ public class UDP_server {//send2Client udp  广播udp
                 // Send packet to hostAddress:9999, server that listen
                 // 9999 would reply this packet
 
-                String bufString="Room Number:   "+ nowRoomNum;//uuid 表示房间号，绝对唯一
+                String bufString="myRoom Number:   "+ nowRoomNum;//uuid 表示房间号，绝对唯一
                 buf=bufString.getBytes();
                 DatagramPacket out = new DatagramPacket(buf,
 
