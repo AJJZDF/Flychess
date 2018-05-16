@@ -1,162 +1,211 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package protocol;
 
 import java.io.Serializable;
 import java.util.Vector;
 
-/*
-房间流程            (带inroom都是房间内指令)
-server向client发送当前已有房间号  当前房间列表（刷新ui）  S2C_ROOM_LIST
-client发送试图进入哪个房间                                C2S_CLIENT_TRY_JOIN_ROOM
-server返回加入是否成功信息(是 和 否 两条枚举信息)（刷ui） S2C_JOIN_ROOM_SUCCESS/S2C_JOIN_ROOM_FAIL
-    client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）    S2C_INROOM_ROOM_PERSONS
-    client发送退出房间指令                                                          C2S_INROOM_QUIT_ROOM
-    server播报某某某退出房间指令（刷新ui）                                          S2C_INROOM_SB_QUIT_ROOM
-房主发送，申请开始游戏指令。                              C2S_INROOM_TRY_GAME_START
-server播报开始游戏指令（刷新ui）                          S2C_INROOM_GAME_START
-
-server播报游戏结束（退出游戏ui）                          S2C_INROOM_GAME_FINISH
-
-
-
-创建房间：
-client 发送房间名string 给server                                      protocol SEND_CREATE_ROOM
-server（map《string roomname，room 》 判断是否有这个房间key）
-如果 没有，就返回创建成功，以及房间信息（room对象）。                   protocol
-如果有，返回创建失败                                                      protocol
-
- */
-
-
-//维护更新ui的指令，即服务端发给客户端的东西
-public class MsgUnity implements Serializable{//用于unity 更新ui
-
-
-    public static final int S2C_ROOM_LIST=0;                //server向client发送当前已有房间号  当前房间列表（刷新ui）          (roomList)
-
-    public static final int S2C_JOIN_ROOM_SUCCESS=1;        //server返回加入是否成功信息（是 和 否 两条枚举信息）（刷ui）       （无操作数）
-    public static final int S2C_JOIN_ROOM_FAIL=2;
-
-    public static final int S2C_INROOM_ROOM_PERSONS=3;      //client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）  （roomPersons）
-
-    public static final int S2C_INROOM_GAME_START=4;        //server 在房间内 播报开始游戏指令（刷新ui）                             （无操作数）
-
-    public static final int S2C_INROOM_SB_QUIT_ROOM=5;      //server 在房间内 播报某某某退出房间指令（刷新ui）                          （personQuit）
-
-    public static final int S2C_INROOM_GAME_FINISH=6;       //server 在房间内 播报游戏结束（退出游戏ui）                                （无操作数）
-
-public static final int S2C_INROOM_ROOMMATE_STATE_CHANGE=7; //server在client请求改变房间状态后，发送改变后的房间状态列表给client    (roommateStateList)
+public class MsgUnity implements Serializable {
+    public static final int UPDATE_ACTION_LIST = 1;
+    public static final int CHANGE_NAME_IN_UI = 2;
+    public static final int THROW_DICE = 3;
+    public static final int SET_GIVEN_FORCE = 4;
+    public static final int SET_DICE = 5;
+    public static final int SET_CHOICE = 6;
+    public static final int SET_SWITCH = 7;
+    public static final int SET_END_THIS_TURN = 8;
+    public static final int UPDATE_FORCE = 9;
+    public static final int THROW_DICE_UI = 10;
+    public static final int EXIT_GAME  = 11;//玩家在游戏中途退出游戏(最后一人退出时删除线程,否则切换为AI模式,但是都要删除socket)
+    public static final int SHOW_RANKING_LIST = 12;//排行榜
+    public static final int REPLAY_GAME = 13;//回放游戏
+    public static final int TO_NETWORK_MODE = 14;//网络模式
+    public static final int FORCE_EXIT = 15;//强制退出
+    public static final int AUTO_THROW_DICE = 16;//服务器自动帮玩家扔骰子
+    public static final int SET_PAUSE_STATUS = 17;
+    public static final int SET_CONTINUE_STATUS = 18;
+    
     private int type;
-    //------------数据
-        //server向client发送当前已有房间号  当前房间列表（刷新ui）                  (roomList)
-    private Vector<String> roomList=new Vector<String>();
-        //client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）  （roomPersons）
-    private Vector<String> roomPersons=new Vector<String>();
-    private String personQuit=null;
+    private Vector<String> vector;
+    private int num;
+    private int num_o;
+    private int user_id;
+    private String str;
+    private float force;
 
-    private Vector<String> roommateStateList=new Vector<String>();
-
-    public MsgUnity(int _type){
-        type=_type;
-    }
-    public void setRoomList(Vector<String> roomList) {
-        this.roomList = roomList;
+    public MsgUnity(int _type) {
+        this.type = _type;
     }
 
-    public void setRoomPersons(Vector<String> roomPersons) {
-        this.roomPersons = roomPersons;
+    public void setUserID(int id)
+    {
+        this.user_id = id;
+    }
+    public int getUserID()
+    {
+        return user_id;
     }
 
-    public void setPersonQuit(String personQuit) {
-        this.personQuit = personQuit;
+
+    public void set_ranking_list(String ranking_list)
+    {
+        this.str = ranking_list;
+    }
+    public String getRankingList()
+    {
+        return str;
+    }
+    public void set_filename(String filename)
+    {
+        vector = new Vector<>();
+        vector.add(filename);
+    }
+    public String get_filename()
+    {
+        return vector.get(0);
+    }
+    public void set_history(String history)
+    {
+        vector.add(history);
+    }
+    public String get_history()
+    {
+        return vector.get(1);
     }
 
-    public void setRoommateStateList(Vector<String> roommateStateList) {
-        this.roommateStateList = roommateStateList;
+    public void setActionList(Vector<String> actionList) {
+        this.vector = actionList;
     }
 
-    public Vector<String> getRoommateStateList() {
-        return roommateStateList;
+    public void setChangeNameInUi(Vector<String> changeNameInUi) {
+        this.vector = changeNameInUi;
     }
 
-    @Override
+    public void setDice(int num) {
+        this.num = num;
+    }
+
+    public void setRoomname(String roomname) {
+        this.str = roomname;
+    }
+
+    public void setChoice(int choice) {
+        this.num = choice;
+    }
+
+    public void setTurn(int turn) {
+        this.num_o = turn;
+    }
+
+    public void setForce(float force) {
+        this.force = force;
+    }
+
     public String toString() {
-        if(this.type==MsgUnity.S2C_ROOM_LIST)//server向client发送当前已有房间号  当前房间列表（刷新ui）          (roomList)
-            return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                    +"Intent = S2C_ROOM_LIST    "
-                    +"server向client发送当前已有房间号  当前房间列表（刷新ui）\n"
-                    +" roomList = "
-                    +this.roomList
-                    +" ]";
-
-        if(this.type==MsgUnity.S2C_INROOM_ROOMMATE_STATE_CHANGE)//server在client请求改变房间状态后，发送改变后的房间状态列表给client    (roommateStateList)
-            return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                    +"Intent = S2C_INROOM_ROOMMATE_STATE_CHANGE    "
-                    +"server在client请求改变房间状态后，发送改变后的房间状态列表给client\n"
-                    +" roommateStateList = "
-                    +this.roommateStateList
-                    +" ]";
-
-        if(this.type==MsgUnity.S2C_INROOM_ROOM_PERSONS)//client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）  （roomPersons）
-            return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                    +"Intent = S2C_INROOM_ROOM_PERSONS \n"
-                    + "client成功加入房间后，server向房间内所有人播报当前在房间里的person（刷新ui）\n"
-                    +" roomPersons = "
-                    +this.roomPersons
-                    +" ]";
-
-        if(this.type==MsgUnity.S2C_INROOM_SB_QUIT_ROOM)//server 在房间内 播报某某某退出房间指令（刷新ui）             （personQuit）
-            return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                    +"Intent = S2C_INROOM_SB_QUIT_ROOM    "
-                    + "server 在房间内 播报某某某退出房间指令（刷新ui）    "
-                    +" personQuit = "
-                    +this.personQuit
-                    +" ]";
-
-        if(this.type==MsgUnity.S2C_JOIN_ROOM_SUCCESS||
-                this.type==MsgUnity.S2C_JOIN_ROOM_FAIL||
-                this.type==MsgUnity.S2C_INROOM_GAME_START||
-                this.type==MsgUnity.S2C_INROOM_GAME_FINISH) {
-            //server返回加入是否成功信息（是 和 否 两条枚举信息）（刷ui）       （无操作数）
-            //server 在房间内 播报开始游戏指令（刷新ui）                             （无操作数）
-            //server 在房间内 播报游戏结束（退出游戏ui）                                （无操作数）
-
-            switch (type) {
-                case MsgUnity.S2C_JOIN_ROOM_SUCCESS:
-                    return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                            + "Intent = S2C_JOIN_ROOM_SUCCESS"
-                            + " ]";
-                case MsgUnity.S2C_JOIN_ROOM_FAIL:
-                    return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                            + "Intent = S2C_JOIN_ROOM_FAIL"
-                            + " ]";
-                case MsgUnity.S2C_INROOM_GAME_START:
-                    return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                            + "Intent = S2C_INROOM_GAME_START"
-                            + " ]";
-                case MsgUnity.S2C_INROOM_GAME_FINISH:
-                    return "[ MsgType = LOGI_UNITY_UPDATE_UI    "
-                            + "Intent = S2C_INROOM_GAME_FINISH"
-                            + " ]";
-            }
+        if (this.type == UPDATE_ACTION_LIST) {
+            return "[ MsgType = UPDATE_ACTION_LIST    Intent = Action_List    server向client发送动作序列\n actionlist = " + this.vector + " ]";
+        } else if (this.type == CHANGE_NAME_IN_UI) {
+            return "[ MsgType = CHANGE_NAME_IN_UI    Intent = name_list    server向client发送滚动条序列\n namelist = " + this.vector + " ]";
+        } 
+        else if(this.type == THROW_DICE)
+        {
+        	return "[ MsgType = THROW_DICE  dice : " + getDice();
         }
-        return "[error type]"    ;
+        else if(this.type == SET_GIVEN_FORCE)
+        {
+        	return "[ MsgType = SET_GIVEN_FORCE:";
+        }
+        else if(this.type == SET_DICE)
+        {
+        	return "[ MsgType = SET_DICE dice :" + getDice();
+        }
+        else if(this.type == SET_CHOICE)
+        {
+        	return "[ MsgType = SET_CHOICE choice :" + getDice();
+        }
+        else if(this.type == SET_SWITCH)
+        {
+        	return "[ MsgType = SET_SWITCH";
+        }
+        else if(this.type == SET_END_THIS_TURN)
+        {
+        	return "[ MsgType = SET_END_THIS_TURN";
+        }
+        else if(this.type == UPDATE_FORCE)
+        {
+            return "[ MsgType = UPDATE_FORCE";
+        }
+        else if(this.type == THROW_DICE_UI)
+        {
+        	return "[ MsgType = THROW_DICE_UI dice :" + getDice();
+        }
+        else if(this.type == EXIT_GAME)
+        {
+            return "[ MsgType = EXIT_GAME";
+        }
+        else if(this.type == SHOW_RANKING_LIST)
+        {
+            return "[ MsgType = SHOW_RANKING_LIST";
+        }
+        else if(this.type == REPLAY_GAME)
+        {
+            return "[ MsgType = REPLAY_GAME";
+        }
+        else if(this.type == TO_NETWORK_MODE)
+        {
+            return "[ MsgType = TO_NETWORK_MODE";
+        }
+        else if(this.type == FORCE_EXIT)
+        {
+            return "[ MsgType = FORCE_EXIT";
+        }
+        else if(this.type == AUTO_THROW_DICE)
+        {
+            return "[ MsgType = AUTO_THROW_DICE";
+        }
+        else if(this.type == SET_PAUSE_STATUS)
+        {
+            return "[ MsgType = SET_PAUSE_STATUS";
+        }
+        else if(this.type == SET_CONTINUE_STATUS)
+        {
+            return "[ MsgType = SET_CONTINUE_STATUS";
+        }
+        return "[error type]";
     }
 
-    public int getType(){
-        return type;
+    public int getType() {
+        return this.type;
     }
 
-    public String getPersonQuit() {
-        return personQuit;
+    public Vector<String> getActionlist() {
+        return this.vector;
     }
 
-    public Vector<String> getRoomList() {
-        return roomList;
+    public Vector<String> getChangeNameInUi() {
+        return this.vector;
     }
 
-    public Vector<String> getRoomPersons() {
-        return roomPersons;
+    public int getDice() {
+        return this.num;
     }
 
+    public String getRoomname() {
+        return this.str;
+    }
+
+    public int getChoice() {
+        return this.num;
+    }
+
+    public int getTurn() {
+        return this.num_o;
+    }
+
+    public float getForce() {
+        return this.force;
+    }
 }
-

@@ -1,103 +1,155 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package protocol;
 
-import NetworkRoom4Unity.NetworkRoommateState;
-
 import java.io.Serializable;
+import java.util.Vector;
 
-
-//维护游戏开始前的逻辑，主要为客户端发送给服务器端的指令
 public class MsgLogic implements Serializable {
-    public static final int C2S_CLIENT_TRY_JOIN_ROOM=0;          //client发送试图进入哪个房间          (tryRoomNum)
-    public static final int C2S_INROOM_TRY_GAME_START=1;         //房主发送，申请开始游戏指令         (无操作数)
-    public static final int C2S_INROOM_QUIT_ROOM=2;              //发送退出房间指令                    ( usr)
-
-    public static final int C2S_SEND_CREATE_ROOM=3;             //client 发送房间名string 给server    （tryCreateRoomName）
-
-    public static final int C2S_REQUSET_ROOMMATE_STATE_CHANGE=4;    //client发送请求改变房间某个人物状态的消息 (requestStateChange)
-
-    public static final int C2S_REQUEST_ONLINE_ROOM=5;              //请求在线的房间，返回有有哪些房间在线        (无操作数)
-
+    public static final int REQUEST_ONLINE_ROOM = 1;
+    public static final int REQUEST_CREATE_ROOM = 2;
+    public static final int UPDATE_ONLINE_ROOM = 3;
+    public static final int REQUEST_ROOM_STATUS = 4;
+    public static final int UPDATE_ROOM_STATUS = 5;
+    public static final int REQUEST_XP = 6;
+    public static final int UPDATE_XP = 7;
+    public static final int REQUEST_CHAIR = 8;
+    public static final int REQUEST_JOIN_ROOM = 9;
+    public static final int JOIN_ROOM_ANSWER = 10;
+    public static final int REQUEST_START_GAME = 11;
+    public static final int START_GAME_ANSWER = 12;
+    public static final int ANSWER_ASSESS = 13;
+    public static final int ANSWER_FORBIDDEN = 14;
+    public static final int UPDATE_USERID = 15;//返回玩家的id
     private int type;
-    //---------------数据
-        //Join room number(uuid)
-    private String tryRoomNum=null;
-    private String usr=null;
-    private String tryCreateRoomName=null;
-    private NetworkRoommateState requestStateChange=null;
+    private int num;
+    private int user_id;
+    private String roomname = null;
+    private String usr = null;
+    private String str = null;
+    private Vector<String> vector;
 
-    public MsgLogic(int _type){
-        type=_type;
+    public MsgLogic(int _type) {
+        this.type = _type;
     }
 
-    public void setTryRoomNum(String tryRoomNum) {
-        this.tryRoomNum = tryRoomNum;
+    public void setUserID(int id)
+    {
+        this.user_id = id;
     }
+    public int getUserID()
+    {
+        return user_id;
+    }
+    public void setRoomName(String roomname) {
+        this.roomname = roomname;
+    }
+
+    public String getRoomName() {
+        return this.roomname;
+    }
+
     public void setUsr(String usr) {
         this.usr = usr;
     }
-    public void setTryCreateRoomName(String tryCreateRoomName) {
-        this.tryCreateRoomName = tryCreateRoomName;
-    }
-    public void setRequestStateChange(NetworkRoommateState requestStateChange) {
-        this.requestStateChange = requestStateChange;
-    }
 
-    public NetworkRoommateState getRequestStateChange() {
-        return requestStateChange;
-    }
-    public String getTryCreateRoomName() {
-        return tryCreateRoomName;
-    }
     public String getUsr() {
-        return usr;
-    }
-    public String getTryRoomNum() {
-        return tryRoomNum;
+        return this.usr;
     }
 
-    @Override
-    public String toString() {
+    public void setAssess(boolean assess) {
+        if (assess) {
+            this.num = 13;
+        } else {
+            this.num = 14;
+        }
 
-        if(this.type==MsgLogic.C2S_INROOM_TRY_GAME_START)
-            return "[ MsgType = LOGI_MSG    "
-                    +"Intent = C2S_INROOM_TRY_GAME_START "
-                    +" ]";
-        if(this.type==MsgLogic.C2S_CLIENT_TRY_JOIN_ROOM)//client发送试图进入哪个房间          (tryRoomNum)
-            return "[ MsgType = LOGI_MSG    "
-                    +"Intent = C2S_CLIENT_TRY_JOIN_ROOM    "
-                    +"client发送试图进入房间    "
-                    +"  Try myRoom Number = "
-                    +this.tryRoomNum
-                    +" ]";
-        if(this.type==MsgLogic.C2S_INROOM_QUIT_ROOM)//发送退出房间指令                    ( usr)
-            return "[ MsgType = LOGI_MSG    "
-                    +"Intent = C2S_INROOM_QUIT_ROOM    "
-                    +"client Usr 发送退出房间指令    "
-                    +"  Quit myRoom Usr = "
-                    +this.usr
-                    +" ]";
-        if(this.type==MsgLogic.C2S_SEND_CREATE_ROOM)//client 发送房间名string 给server    （tryCreateRoomName）
-            return "[ MsgType = LOGI_MSG    "
-                    +"Intent = C2S_SEND_CREATE_ROOM    "
-                    +"client 发送房间名string 给server    "
-                    +"tryCreateRoomName = "
-                    +this.tryCreateRoomName
-                    +" ]";
-        if(this.type==MsgLogic.C2S_REQUSET_ROOMMATE_STATE_CHANGE) //client发送请求改变房间某个人物状态的消息 (requestStateChange)
-            return "[ MsgType = LOGI_MSG    "
-                    +"Intent = C2S_REQUSET_ROOMMATE_STATE_CHANGE    "
-                    +"client发送请求改变房间某个人物状态的消息    "
-                    +"requestStateChange = "
-                    +this.requestStateChange
-                    +" ]";
-        if(this.type==MsgLogic.C2S_REQUEST_ONLINE_ROOM) //请求在线的房间，返回有有哪些房间在线        (无操作数)
-            return "[ MsgType = LOGI_MSG    "
-                    +"Intent = C2S_REQUEST_ONLINE_ROOM    "
-                    +"请求在线的房间    "
-                    +" ]";
-        return "[error type]";
     }
-    public int getType(){
-        return type;
+
+    public boolean getAssess() {
+        return this.num == 13;
+    }
+
+    public void setOnlineRooms(Vector<String> onlineRooms) {
+        this.vector = onlineRooms;
+    }
+
+    public Vector<String> getOnlineRooms() {
+        return this.vector;
+    }
+
+    public void setRoomStatus(Vector<String> roomStatus) {
+        this.vector = roomStatus;
+    }
+
+    public Vector<String> getRoomStatus() {
+        return this.vector;
+    }
+
+    public void setXP(int xp) {
+        this.num = xp;
+    }
+
+    public int getXP() {
+        return this.num;
+    }
+
+    public void setChairState(String str) {
+        this.str = str;
+    }
+
+    public String getChairState() {
+        return this.str;
+    }
+
+    public String toString()
+    {
+        if (this.type == 1) {
+            return "[ REQUEST_ONLINE_ROOM ]";
+        } else if (this.type == 2) {
+            return "[ REQUEST_CREATE_ROOM ]";
+        } else if (this.type == 4) {
+            return "[ REQUEST_ROOM_STATUS ]";
+        } else if (this.type == 6) {
+            return "[ REQUEST_XP ]";
+        } else if (this.type == 7) {
+            return "[ UPDATE_XP ]";
+        } else if (this.type == 8) {
+            return "[ In " + this.roomname + "REQUEST_CHAIR " + this.str + " ]";
+        } else if (this.type == 9) {
+            return "[ " + this.usr + "REQUEST_JOIN_ROOM " + this.roomname + " ]";
+        } else if (this.type == 10) {
+            return "[ JOIN_ROOM_ANSWER: " + this.getAssess() + " ]";
+        } else if (this.type == 11) {
+            return "[ REQUEST_START_GAME ]";
+        } else if (this.type == 12) {
+            return "[ START_GAME_ANSWER ]";
+        } else if (this.type == 3) {
+            return "[ MsgType = UPDATE_ONLINE_ROOM    Intent = LOGIC_SERIAL    在线房间     online_rooms = " + this.vector.toString() + " ]";
+        }
+        else if(this.type == UPDATE_ROOM_STATUS)
+        {
+            return "[ UPDATE_ROOM_STATUS ]";
+        }
+        else if(this.type == ANSWER_ASSESS)
+        {
+            return "[ ANSWER_ASSESS ]";
+        }
+        else if(this.type == ANSWER_FORBIDDEN)
+        {
+            return "[ ANSWER_FORBIDDEN ]";
+        }
+        else if(this.type == UPDATE_USERID)
+        {
+            return "[ UPDATE_USERID ]";
+        }
+        return "[ error type ]";
+    }
+
+    public int getType() {
+        return this.type;
     }
 }
